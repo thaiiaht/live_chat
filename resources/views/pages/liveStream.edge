@@ -7,7 +7,7 @@
                     <div class="video-section">
                         <div class="video-player"></div>
                         <div class="video-info">
-                            <h1 class="video-title">{{ room.roomName }}</h1>
+                            <h1 class="video-title">Test live</h1>
                             <div class="video-meta">
                                 <span>0 - 0</span>
                             </div>
@@ -19,7 +19,7 @@
                         <div class="chat-view">
                             <div class="chat-header">
                                 <h3 class="chat-title">Live Chat</h3>
-                                <h3 class="chat-views">Chat Room {{ room.id }}</h3>
+                                <h3 class="chat-views">Chat Room {{ roomId }}</h3>
                             </div>
                             <div id="messages" class="chat-messages">
                                 <!-- Chat messages here -->
@@ -42,6 +42,7 @@
 
 @slot('scripts')
     <script>
+        window.roomId = "{{ roomId }}"
         window.guestName = 'Guest_' + Math.floor(Math.random() * 10000)
     </script>
     <script type="module" src="/resources/js/liveStream.js"></script>
