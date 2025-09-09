@@ -1,0 +1,50 @@
+@layout.main() 
+    @slot('content')
+        <div class="container">
+            <div class="main-content">
+                <div class="content">
+                    <!-- Video Section -->
+                    <div class="video-section">
+                        <div class="video-player"></div>
+                        <div class="video-info">
+                            <h1 class="video-title">{{ room.roomName }}</h1>
+                            <div class="video-meta">
+                                <span>0 - 0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Chat -->
+                    <div class="live-chat">
+                        <div class="chat-view">
+                            <div class="chat-header">
+                                <h3 class="chat-title">Live Chat</h3>
+                                <h3 class="chat-views">Chat Room {{ room.id }}</h3>
+                            </div>
+                            <div id="messages" class="chat-messages">
+                                <!-- Chat messages here -->
+                            </div>
+                        </div>
+                        <form id="form" class="chat-input-section">
+                            <input id="body" type="text" class="chat-input" placeholder="Say something...">
+                            <button class="chat-send">Gift</button>
+                            <button type="submit" class="chat-send">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+@endslot
+
+@slot('styles')
+    <link rel="stylesheet" href="/resources/css/liveStream.css">
+@endslot
+
+@slot('scripts')
+    <script>
+        window.guestName = 'Guest_' + Math.floor(Math.random() * 10000)
+    </script>
+    <script type="module" src="/resources/js/liveStream.js"></script>
+@endslot
+
+@end

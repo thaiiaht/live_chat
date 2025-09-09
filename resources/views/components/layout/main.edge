@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/resources/css/main.css" />
+  <title>{{ title || "What a goal!" }}</title>
+  @if ($slots.styles)
+    {{{ await $slots.styles() }}}
+  @endif
+</head>
+<body>
+  <div class="container">
+    <div class="main-content">
+      @include('partials/header')
+
+      @if ($slots.content)
+        {{{ await $slots.content() }}}
+      @endif
+    </div>
+  </div>
+
+  <script src="/resources/js/main.js"></script>
+  @if ($slots.scripts)
+    {{{ await $slots.scripts() }}}
+  @endif
+</body>
+</html>

@@ -1,0 +1,27 @@
+@layout.main() 
+    
+@slot('content')
+    <div class="news-container">
+        @each(rooms in room)
+        <a href="/chat/{{rooms.id}}/messages" style="text-decoration: none;">
+            <article class="news-item">
+                <div class="news-content">
+                    <h2 class="news-title">{{ rooms.roomName }}</h2>
+                    <p>Debug ID: {{ rooms.id }}</p>
+                </div>
+            </article>
+        </a>   
+        @endeach
+    </div>
+
+@endslot
+
+@slot('styles')
+    <link rel="stylesheet" href="/resources/css/home.css">
+@endslot
+
+@slot('scripts')
+    <script src="/resources/js/home.js"></script>
+@endslot
+
+@end
