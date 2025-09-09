@@ -27,7 +27,6 @@ try {
   console.log('Creating subscription for chatId:', chatId)
 
   subscription.onMessage((data) => 
-    console.log('Realtime message received:', data),
     appendMessage(data))
   await subscription.create()}
   catch (err) {

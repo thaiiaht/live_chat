@@ -26,8 +26,7 @@ export default class ChatsController {
     let sender = request.input('sender')
 
     if (!sender) {
-        response.badRequest('không có sender')
-    //   sender = 'Guest_' + Math.floor(Math.random() * 10000)
+       sender = 'Guest_' + Math.floor(Math.random() * 10000)
     }
 
     if (!body || body.trim() === '') {
@@ -41,7 +40,7 @@ export default class ChatsController {
     })
 
     // broadcast realtime
-    transmit.broadcast(`chats/${params.id}/messages`, {
+    transmit.broadcast(`/chats/messages/${params.id}`, {
       id: msg.id,
       roomId: msg.roomId,
       sender: msg.sender,
