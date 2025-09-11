@@ -1,3 +1,6 @@
+import '#start/routes/auth'
+import '#start/routes/rooms'
+
 import router from '@adonisjs/core/services/router'
 import transmit from '@adonisjs/transmit/services/main'
 import ChatsController from '#controllers/ChatsController'

@@ -5,11 +5,11 @@
                 <div class="content">
                     <!-- Video Section -->
                     <div class="video-section">
-                        <div class="video-player"></div>
+                        <div class="video-player"> <img class="player" src="/public/Image/huh.jpg"></div>
                         <div class="video-info">
-                            <h1 class="video-title">Test live</h1>
+                            <h1 class="video-title">{{ room.roomName }}</h1>
                             <div class="video-meta">
-                                <span>0 - 0</span>
+                                <span>{{ room.venue }}</span>
                             </div>
                         </div>
                     </div>
@@ -19,7 +19,7 @@
                         <div class="chat-view">
                             <div class="chat-header">
                                 <h3 class="chat-title">Live Chat</h3>
-                                <h3 class="chat-views">Chat Room {{ roomId }}</h3>
+                                <h3 class="chat-views">Chat Room {{ room.id }}</h3>
                             </div>
                             <div id="messages" class="chat-messages">
                                 <!-- Chat messages here -->
@@ -27,7 +27,10 @@
                         </div>
                         <form id="form" class="chat-input-section">
                             <input id="body" type="text" class="chat-input" placeholder="Say something...">
-                            <button class="chat-send">Gift</button>
+                            <div class="donate-place">
+                                <button onclick="donate()" class="donate" ><img class="chat-donate" src="/public/Image/do.jpg"></button>
+
+                            </div>
                             <button type="submit" class="chat-send">Send</button>
                         </form>
                     </div>
@@ -42,7 +45,7 @@
 
 @slot('scripts')
     <script>
-        window.roomId = "{{ roomId }}"
+        window.roomId = "{{ room.id }}"
         window.guestName = 'Guest_' + Math.floor(Math.random() * 10000)
     </script>
     <script type="module" src="/resources/js/liveStream.js"></script>

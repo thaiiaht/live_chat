@@ -2,12 +2,17 @@ import { Transmit } from "@adonisjs/transmit-client"
 
 const chatId = window.roomId
 const guestName = window.guestName
-
 const messagesEl = document.getElementById('messages')
 const form = document.getElementById('form')
 const bodyInput = document.getElementById('body')
-
 const transmit = new Transmit({ baseUrl: window.location.origin })
+
+// Open popup donate
+
+function donate() {
+  document.getElementById('registerModal').style.display = 'block';
+}
+
 
 // Load 50 tin nhắn đầu
 async function loadHistory() {

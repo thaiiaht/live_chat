@@ -1,10 +1,12 @@
 import { HttpContext } from '@adonisjs/core/http'
 import ChatMessage from '#models/chat_message'
 import transmit from '@adonisjs/transmit/services/main'
+import Room from '#models/room'
 
 export default class ChatsController {
   async show({ view, params }: HttpContext) {
-    return view.render('pages/liveStream', { roomId:params.id } )
+    const room = await Room.findByOrFail('id', params.id)
+    return view.render('pages/liveStream', { room } )
   }
 
   // Lấy 50 tin mới nhất

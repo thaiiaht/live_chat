@@ -2,12 +2,12 @@
     
 @slot('content')
     <div class="news-container">
-        @each(rooms in room)
-        <a href="/chat/{{rooms.id}}/messages" style="text-decoration: none;">
+        @each(room in rooms)
+        <a href="/chats/{{room.id}}" style="text-decoration: none;">
             <article class="news-item">
                 <div class="news-content">
-                    <h2 class="news-title">{{ rooms.roomName }}</h2>
-                    <p>Debug ID: {{ rooms.id }}</p>
+                    <h3 class="news-title">{{ room.roomName }}</h2>
+                    <p>Venue: {{ room.venue }}</p>
                 </div>
             </article>
         </a>   

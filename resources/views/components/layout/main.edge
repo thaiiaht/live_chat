@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/resources/css/main.css" />
-  <title>{{ title || "What a goal!" }}</title>
+  <link rel="stylesheet" href="/resources/css/auth.css" />
+  <title>{{ title || "Live Stream" }}</title>
   @if ($slots.styles)
     {{{ await $slots.styles() }}}
   @endif
@@ -20,7 +21,7 @@
     </div>
   </div>
 
-  <script src="/resources/js/main.js"></script>
+  <script src="/resources/js/auth.js"></script>
   @if ($slots.scripts)
     {{{ await $slots.scripts() }}}
   @endif
