@@ -56,6 +56,7 @@ form.addEventListener('submit', async (e) => {
   }
 })
 
+
 // Render message
 function appendMessage(msg) {
   const el = document.createElement('div')

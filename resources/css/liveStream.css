@@ -28,6 +28,7 @@
 
     /* Video Section */
     .video-section {
+        border: 2px solid #1e3a8a;
         height: 93vh;
         background: #ffffff;
         overflow: visible;
@@ -39,10 +40,12 @@
 
     .video-player {
         margin: 0 auto;
-        height: min(80vh, 100%);
-        width: 90%;
+        margin-top: 50px;
+        height: min(70vh, 100%);
+        width: 70%;
         background: #eeeeee;
         position: relative;
+        border: 2px solid #1e3a8a;
     }
 
     .player {
@@ -66,13 +69,15 @@
     .video-info {
         padding: 20px 40px;
         margin: 0 auto;
+        margin-top: 20px;
     }
 
     .video-title {
         color: #000000;
-        font-size: 20px;
+        font-size: 25px;
         font-weight: 400;
         line-height: 1.4;
+        font-weight: bold;  
     }
 
     .video-meta {
@@ -81,14 +86,14 @@
         align-items: center;
         gap: 8px;
         color: #aaa;
-        font-size: 14px;
+        font-size: 16px;
         margin-bottom: 16px;
     }
 
     /* Live Chat */
     .live-chat {
-        background: #ffffff;
-        border-left: 1px solid #3f3f3f;
+        background-color: #1e3a8a;
+        border: 2px solid #1e3a8a;
         display: flex;
         flex-direction: column;
         height: 93vh;
@@ -112,14 +117,14 @@
     }
 
     .chat-title {
-        color: #000000;
+        color: #fff;
         font-size: 16px;
         font-weight: 500;
         font-weight: bold;
     }
 
     .chat-views {
-        color: #000000;
+        color: #fff;
         font-size: 13px;
     }
 
@@ -127,6 +132,7 @@
         flex: 1;
         padding: 12px;
         overflow-y: auto;
+        background: #f2f2f2;
     }
 
     .chat-messages::-webkit-scrollbar {
@@ -143,44 +149,22 @@
         padding: 1%;
         border-top: 1px solid #3f3f3f;
         flex-shrink: 0; /* ✅ không bị co khi màn hình nhỏ */
+        align-items: center;
     }
 
     .chat-input {
         width: 100%;
-        background: #f2f2f2;
+        background: #efe5e5;
         border: 1px solid #3f3f3f;
         color: #000;
         padding: 10px 12px;
-        border-radius: 20px;
+        border-radius: 10px;
         outline: none;
         font-size: 14px;
     }
 
-    .donate {
-        border: 1px solid #ffffff;
-        cursor: pointer;
-    }
-
-    .chat-donate {
-        max-width: 50px;  /* Giới hạn chiều rộng tối đa */
-        max-height: 50px; /* Giới hạn chiều cao tối đa */
-        width: auto;       /* Tự động co theo tỉ lệ */
-        height: auto;
-        display: block;    /* Loại bỏ khoảng trắng dưới ảnh */
-        object-fit: contain; /* Đảm bảo không méo ảnh */
-    }
-
-    .chat-donate :hover {
-        background-color: red;
-        color: white;
-    }
-
-    .chat-donate :active {
-        background-color: darkred;
-    }
-
     .chat-send {
-        background: #622df7;
+        background: #1e3a8a;
         border: 1px solid #ffffff;
         color: #ffffff;
         padding: 10px 12px;

@@ -5,7 +5,7 @@
                 <div class="content">
                     <!-- Video Section -->
                     <div class="video-section">
-                        <div class="video-player"> <img class="player" src="/public/Image/huh.jpg"></div>
+                        <div class="video-player"> <img class="player" src="/public/Image/ý.webp"></div>
                         <div class="video-info">
                             <h1 class="video-title">{{ room.roomName }}</h1>
                             <div class="video-meta">
@@ -26,11 +26,78 @@
                             </div>
                         </div>
                         <form id="form" class="chat-input-section">
-                            <input id="body" type="text" class="chat-input" placeholder="Say something...">
-                            <div class="donate-place">
-                                <button onclick="donate()" class="donate" ><img class="chat-donate" src="/public/Image/do.jpg"></button>
+                        <input id="body" type="text" class="chat-input" autocomplete="off" placeholder="Say something...">
+                        <div class="donate-container">
+                            <button type="button" class="donate-trigger" onclick="toggleDonationCard()">
+                                🎁
+                            </button>
+                            <div class="donation-card" id="donationCard">
+                                <div class="card-header">
+                                    <button class="close-btn" onclick="closeDonationCard()">&times;</button>
+                                    <div class="card-title">🎁 Chọn Quà</div>
+                                </div>
 
+                                <div class="gifts-container">
+                                    <div class="gift-item" onclick="selectGift(0, this)">
+                                        <div class="gift-icon">☕</div>
+                                        <div class="gift-info">
+                                            <div class="gift-name">Cà Phê</div>
+                                            <div class="gift-amount">25K</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="gift-item" onclick="selectGift(1, this)">
+                                        <div class="gift-icon">🍜</div>
+                                        <div class="gift-info">
+                                            <div class="gift-name">Bữa Sáng</div>
+                                            <div class="gift-amount">50K</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="gift-item" onclick="selectGift(2, this)">
+                                        <div class="gift-icon">🍕</div>
+                                        <div class="gift-info">
+                                            <div class="gift-name">Bữa Trưa</div>
+                                            <div class="gift-amount">100K</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="gift-item" onclick="selectGift(3, this)">
+                                        <div class="gift-icon">🎮</div>
+                                        <div class="gift-info">
+                                            <div class="gift-name">Game Mới</div>
+                                            <div class="gift-amount">200K</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="gift-item" onclick="selectGift(4, this)">
+                                        <div class="gift-icon">🖥️</div>
+                                        <div class="gift-info">
+                                            <div class="gift-name">Setup</div>
+                                            <div class="gift-amount">500K</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="gift-item" onclick="selectGift(5, this)">
+                                        <div class="gift-icon">🚀</div>
+                                        <div class="gift-info">
+                                            <div class="gift-name">Mega</div>
+                                            <div class="gift-amount">1M</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer">
+                                    <div class="total-display">
+                                        <span class="total-label">Tổng:</span>
+                                        <span class="total-amount" id="totalAmount">0K</span>
+                                    </div>
+                                    <button class="donate-btn" id="donateBtn" onclick="processDonation()" disabled>
+                                        Chọn quà
+                                    </button>
+                                </div>
                             </div>
+                        </div>
                             <button type="submit" class="chat-send">Send</button>
                         </form>
                     </div>
@@ -41,6 +108,7 @@
 
 @slot('styles')
     <link rel="stylesheet" href="/resources/css/liveStream.css">
+    <link rel="stylesheet" href="/resources/css/donate.css">
 @endslot
 
 @slot('scripts')
@@ -49,6 +117,7 @@
         window.guestName = 'Guest_' + Math.floor(Math.random() * 10000)
     </script>
     <script type="module" src="/resources/js/liveStream.js"></script>
+    <script src="/resources/js/donate.js"></script>
 @endslot
 
 @end
