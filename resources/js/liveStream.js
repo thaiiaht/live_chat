@@ -5,21 +5,42 @@ const guestName = window.guestName
 const messagesEl = document.getElementById('messages')
 const form = document.getElementById('form')
 const bodyInput = document.getElementById('body')
-const transmit = new Transmit({ baseUrl: window.location.origin })
 
-// Open popup donate
+let accessToken = null
+let currentUser = null
 
-function donate() {
-  document.getElementById('registerModal').style.display = 'block';
+async function checkMe() {
+    const token = localStorage.getItem('token');
+    if(!token) return null;
+
+    try {
+        const res = await fetch('/auth/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if(res.ok) {
+            const user = await res.json();
+            localStorage.setItem('user', JSON.stringify(user));
+            return user;
+        }
+    } catch(err) {
+        console.error(err);
+    }
 }
 
+const transmit = new Transmit({ baseUrl: window.location.origin })
 
 // Load 50 tin nhắn đầu
 async function loadHistory() {
   try {
-    const res = await fetch(`/chats/messages/${chatId}`)
-    const messages = await res.json() // giờ trả mảng trực tiếp
-    messages.forEach(msg => appendMessage(msg))
+    const res = await fetch(`/chats/messages/${chatId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
+    })
+    if (!res.ok) throw new Error(await res.text())
+    const messages = await res.json()
+    messages.forEach((msg) => appendMessage(msg))
   } catch (err) {
     console.error('load history failed', err)
   }
@@ -29,8 +50,6 @@ async function loadHistory() {
 async function initRealtime() {
 try {
   const subscription = transmit.subscription(`/chats/messages/${chatId}`)
-  console.log('Creating subscription for chatId:', chatId)
-
   subscription.onMessage((data) => 
     appendMessage(data))
   await subscription.create()}
@@ -44,12 +63,21 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault()
   const body = bodyInput.value.trim()
   if (!body) return
+
   try {
+    const payload = accessToken
+      ? { body }
+      : { body, sender: guestName }
+
     const res = await fetch(`/chats/messages/${chatId}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sender: guestName, body })
+      headers: { 
+      'Content-Type': 'application/json' },
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}`} : {}),
+      body: JSON.stringify(payload),
     })
+    
+
     if (res.ok) bodyInput.value = ''
   } catch (err) {
     console.error(err)
@@ -75,5 +103,12 @@ function escapeHtml(s) {
 }
 
 // Init
-await loadHistory()
-await initRealtime()
+async function initApp() {
+  currentUser = await checkMe()
+  accessToken = localStorage.getItem('token')
+
+  await loadHistory()
+  await initRealtime()
+}
+
+await initApp()
