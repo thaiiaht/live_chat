@@ -65,15 +65,16 @@ form.addEventListener('submit', async (e) => {
   if (!body) return
 
   try {
-    const payload = accessToken
-      ? { body }
-      : { body, sender: guestName }
+    const payload = accessToken 
+    ? { body, sender: currentUser ? (currentUser.fullName || currentUser.email) : undefined } 
+    : { body, sender: guestName }
 
     const res = await fetch(`/chats/messages/${chatId}`, {
       method: 'POST',
       headers: { 
-      'Content-Type': 'application/json' },
+      'Content-Type': 'application/json' ,
       ...(accessToken ? { Authorization: `Bearer ${accessToken}`} : {}),
+      },
       body: JSON.stringify(payload),
     })
     
