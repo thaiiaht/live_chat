@@ -6,26 +6,10 @@ const messagesEl = document.getElementById('messages')
 const form = document.getElementById('form')
 const bodyInput = document.getElementById('body')
 
+let lastGuestMessageAt = null
+const GUEST_COOLDOWN = 60 * 1000 // 1 phút
 let accessToken = null
 let currentUser = null
-
-async function checkMe() {
-    const token = localStorage.getItem('token');
-    if(!token) return null;
-
-    try {
-        const res = await fetch('/auth/me', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if(res.ok) {
-            const user = await res.json();
-            localStorage.setItem('user', JSON.stringify(user));
-            return user;
-        }
-    } catch(err) {
-        console.error(err);
-    }
-}
 
 const transmit = new Transmit({ baseUrl: window.location.origin })
 
@@ -64,6 +48,16 @@ form.addEventListener('submit', async (e) => {
   const body = bodyInput.value.trim()
   if (!body) return
 
+   // Nếu là guest thì check cooldown
+  if (!accessToken) {
+    const now = Date.now()
+    if (lastGuestMessageAt && (now - lastGuestMessageAt) < GUEST_COOLDOWN) {
+      const remaining = Math.ceil((GUEST_COOLDOWN - (now - lastGuestMessageAt)) / 1000)
+      alert(`Bạn phải chờ ${remaining} giây nữa mới được chat tiếp!`)
+      return
+    }
+    lastGuestMessageAt = now
+  }
   try {
     const payload = accessToken 
     ? { body, sender: currentUser ? (currentUser.fullName || currentUser.email) : undefined } 
@@ -89,9 +83,15 @@ form.addEventListener('submit', async (e) => {
 // Render message
 function appendMessage(msg) {
   const el = document.createElement('div')
+  if (msg.type === 'user') {
   el.style.color = 'black'
   el.innerHTML = `<small>${new Date(msg.createdAt).toLocaleTimeString()}</small>
     <b>${escapeHtml(msg.sender)}:</b> ${escapeHtml(msg.body)}`
+  } 
+  else {
+  el.classList.add('donate-message');
+  el.innerHTML = `🎁 ${escapeHtml(msg.body)}`
+  }
   messagesEl.appendChild(el)
   messagesEl.scrollTop = messagesEl.scrollHeight
 }

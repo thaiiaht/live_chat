@@ -43,17 +43,26 @@
                     <div class="modal-content">
                         <span class="close" onclick="closeRegister()">&times;</span>
                         <h2>Đăng ký</h2>
-                        <form class="login-form" id="registerForm">
+                        <form class="login-form" id="registerForm"  method="post" action="/auth/register">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input class="input-login" type="text" name="fullName" required>
+                        </div>   
                         <div class="form-group">
                             <label>Email</label>
-                            <input class="input-login" type="email" id="email" required>
+                            <input class="input-login" type="email" name="email" required>
                         </div>
                         <div class="form-group">
                             <label>Mật khẩu</label>
-                            <input class="input-login" type="password" id="password" required>
+                            <input class="input-login" type="password" name="password" required>
                         </div> 
                             <button class="btn-login" type="submit">Đăng ký</button>
                         </form>
+                @if(flashMessages.has('notification'))
+                <script>
+                    alert(`{{ flashMessages.get('notification').message }}`);
+                </script>    
+                @endif
                     </div>
                 </div>
             </div>

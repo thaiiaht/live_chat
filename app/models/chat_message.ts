@@ -10,6 +10,9 @@ export default class ChatMessage extends BaseModel {
   declare roomId: string
 
   @column()
+  declare type: 'user' | 'system'
+
+  @column()
   declare sender: string
 
   @column()

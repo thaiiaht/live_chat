@@ -2,6 +2,13 @@
     @slot('content')
         <div class="container">
             <div class="main-content">
+            
+            @if(flashMessages.has('notificationDonate'))
+                <script>
+                    alert(`{{ flashMessages.get('notificationDonate').message }}`);
+                </script>    
+            @endif
+
                 <div class="content">
                     <!-- Video Section -->
                     <div class="video-section">
@@ -19,14 +26,14 @@
                         <div class="chat-view">
                             <div class="chat-header">
                                 <h3 class="chat-title">Live Chat</h3>
-                                <h3 class="chat-views">Chat Room {{ room.id }}</h3>
+                                <h3 class="chat-views">Chat Room {{ room.roomName }}</h3>
                             </div>
                             <div id="messages" class="chat-messages">
                                 <!-- Chat messages here -->
                             </div>
                         </div>
                         <form id="form" class="chat-input-section">
-                        <input id="body" type="text" class="chat-input" autocomplete="off" placeholder="Say something...">
+                        <input id="body" type="text" class="chat-input" autocomplete="off" placeholder="Say something..." >
                         <div class="donate-container">
                             <button type="button" class="donate-trigger" onclick="toggleDonationCard()">
                                 🎁

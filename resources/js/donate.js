@@ -1,3 +1,4 @@
+      const chatId = window.roomId
       const gifts = [
             { amount: 25, name: 'Cà Phê' },
             { amount: 50, name: 'Bữa Sáng' },
@@ -63,17 +64,36 @@
             }
         }
 
-        function processDonation() {
+        async function processDonation() {
+            accessToken = localStorage.getItem('token')
+            if(!accessToken) {
+                alert(`Bạn cần đăng nhập để donate`)
+                return
+            }
+            currentUser = await checkMe()
             const selectedItems = Array.from(selectedGifts).map(index => gifts[index].name);
-            alert(`Cảm ơn! 💖\n\nQuà: ${selectedItems.join(', ')}\nTổng: ${totalAmount}K VNĐ`);
-            closeDonationCard();
+
+            const payload = {
+                gift: JSON.stringify(selectedItems),
+                total: totalAmount,
+                sender: currentUser.fullName,
+            };
+                const res = await fetch(`/donate/messages/${chatId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                closeDonationCard();
         }
 
         // Đóng khi click bên ngoài
         document.addEventListener('click', function(event) {
             const container = document.querySelector('.donate-container');
-            const card = document.getElementById('donationCard');
-            
             if (isCardOpen && !container.contains(event.target)) {
                 closeDonationCard();
             }

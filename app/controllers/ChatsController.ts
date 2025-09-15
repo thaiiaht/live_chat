@@ -2,6 +2,7 @@ import { HttpContext } from '@adonisjs/core/http'
 import ChatMessage from '#models/chat_message'
 import transmit from '@adonisjs/transmit/services/main'
 import Room from '#models/room'
+import Donate from '#models/donate'
 
 export default class ChatsController {
   async show({ view, params }: HttpContext) {
@@ -39,6 +40,7 @@ export default class ChatsController {
         roomId: params.id,
         sender: sender,
         body: body,
+        type: 'user',
     })
 
     // broadcast realtime
@@ -48,8 +50,37 @@ export default class ChatsController {
       sender: msg.sender,
       body: msg.body,
       createdAt: msg.createdAt.toISO(),
+      type: 'user',
     })
 
     return response.json(msg)
+  }
+
+  // Donate
+  async donate({ request, params}: HttpContext) {
+    const req = await request.only(['sender', 'gift', 'total'])
+    await Donate.create({
+      userName: req.sender,
+      totalMoney: req.total,
+      donatedItem: req.gift,
+      roomId: params.id,
+    })
+    
+    const msg = await ChatMessage.create({ 
+        roomId: params.id,
+        sender: req.sender,
+        body: ` ${req.sender} đã donate ${req.total}K VNĐ! `,
+        type: 'system',
+    })
+
+    transmit.broadcast(`/chats/messages/${params.id}`, {
+      id: msg.id,
+      roomId: msg.roomId,
+      sender: msg.sender,
+      body: msg.body,
+      createdAt: msg.createdAt.toISO(),
+      type: 'system',
+    })
+
   }
 }

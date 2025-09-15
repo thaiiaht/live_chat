@@ -17,12 +17,17 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
+        redirect: 'manual',
     })
+
+        if (!res.ok) {
+            console.log("❌ LOGIN FAILED - HTTP error")
+            alert(`Email hoặc mật khẩu không đúng!`)
+            return
+        }
+
     const data = await res.json()
-    if (!res.ok) {
-        alert(data.message || 'Đăng nhập thất bại')
-        return
-    }
+
     alert('Đăng nhập thành công!')
     localStorage.setItem('token', data.token)
     document.getElementById('loginModal').style.display = 'none';
@@ -55,13 +60,13 @@ function closeRegister() {
   document.getElementById('registerModal').style.display = 'none';
 }
 
-document.getElementById('registerForm').addEventListener('submit', (e) => {
-  e.preventDefault()
-  const email = document.getElementById('email').value
-  const password = document.getElementById('password').value
-  console.log("Login with:", email, password)
-  // TODO: gọi API login
-})
+// document.getElementById('registerForm').addEventListener('submit', (e) => {
+//   e.preventDefault()
+//   const email = document.getElementById('email').value
+//   const password = document.getElementById('password').value
+//   console.log("Login with:", email, password)
+//   // TODO: gọi API login
+// })
 
 async function checkMe() {
     const token = localStorage.getItem('token');
