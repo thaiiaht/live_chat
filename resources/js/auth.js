@@ -1,8 +1,8 @@
 // login
-function openLogin() {
+export function openLogin() {
   document.getElementById('loginModal').style.display = 'block';
 }
-function closeLogin() {
+export function closeLogin() {
   document.getElementById('loginModal').style.display = 'none';
 }
 
@@ -35,7 +35,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
 })
 
-async function logout() {
+export async function logout() {
   const res = await fetch('/auth/logout', {
     method: 'POST',
     headers: {
@@ -53,10 +53,10 @@ async function logout() {
 
 
 // register
-function openRegister() {
+export function openRegister() {
   document.getElementById('registerModal').style.display = 'block';
 }
-function closeRegister() {
+export function closeRegister() {
   document.getElementById('registerModal').style.display = 'none';
 }
 
@@ -104,5 +104,12 @@ async function initApp() {
   const user = await checkMe();
   showUser(user);
 }
+
+window.logout = logout
+window.openLogin = openLogin
+window.closeLogin = closeLogin
+window.openRegister = openRegister
+window.closeRegister = closeRegister
+
 
 initApp();

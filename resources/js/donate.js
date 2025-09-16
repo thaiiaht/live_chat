@@ -1,3 +1,4 @@
+      import { checkMe } from "./auth";
       const chatId = window.roomId
       const gifts = [
             { amount: 25, name: 'Cà Phê' },
@@ -12,7 +13,7 @@
         let totalAmount = 0;
         let isCardOpen = false;
 
-        function toggleDonationCard() {
+        export function toggleDonationCard() {
             const card = document.getElementById('donationCard');
             
             if (isCardOpen) {
@@ -23,13 +24,17 @@
             }
         }
 
-        function closeDonationCard() {
+        window.toggleDonationCard = toggleDonationCard
+
+        export function closeDonationCard() {
             const card = document.getElementById('donationCard');
             card.classList.remove('show');
             isCardOpen = false;
         }
 
-        function selectGift(index, element) {
+        window.closeDonationCard = closeDonationCard
+
+        export function selectGift(index, element) {
             const gift = gifts[index];
             
             if (selectedGifts.has(index)) {
@@ -45,7 +50,9 @@
             updateTotal();
         }
 
-        function updateTotal() {
+        window.selectGift = selectGift
+
+        export function updateTotal() {
             const totalElement = document.getElementById('totalAmount');
             const donateBtn = document.getElementById('donateBtn');
             
@@ -64,13 +71,15 @@
             }
         }
 
-        async function processDonation() {
-            accessToken = localStorage.getItem('token')
+        window.updateTotal = updateTotal
+
+        export async function processDonation() {
+            let accessToken = localStorage.getItem('token')
             if(!accessToken) {
                 alert(`Bạn cần đăng nhập để donate`)
                 return
             }
-            currentUser = await checkMe()
+            let currentUser = await checkMe()
             const selectedItems = Array.from(selectedGifts).map(index => gifts[index].name);
 
             const payload = {
@@ -78,7 +87,7 @@
                 total: totalAmount,
                 sender: currentUser.fullName,
             };
-                const res = await fetch(`/donate/messages/${chatId}`, {
+                await fetch(`/donate/messages/${chatId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -87,9 +96,10 @@
                     },
                     body: JSON.stringify(payload)
                 });
-                const data = await res.json();
                 closeDonationCard();
         }
+
+        window.processDonation = processDonation
 
         // Đóng khi click bên ngoài
         document.addEventListener('click', function(event) {
