@@ -1,5 +1,21 @@
 import { defineConfig } from 'vite'
 import adonisjs from '@adonisjs/vite/client'
+import { globSync } from 'glob'
+import path from 'path'
+
+
+function generateInputs() {
+  const files = [
+    ...globSync('resources/js/*.js'),
+    ...globSync('resources/css/*.css'),
+  ]
+  const entries = {}
+  for (const file of files) {
+    const name = path.relative('resources', file) // vd: js/app.js
+    entries[name] = path.resolve(__dirname, file)
+  }
+  return entries
+}
 
 export default defineConfig({
   plugins: [
@@ -16,4 +32,9 @@ export default defineConfig({
       reload: ['resources/views/**/*.edge'],
     }),
   ],
+  build: {
+    rollupOptions: {
+      input: generateInputs(),
+    },
+  },
 })
