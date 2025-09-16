@@ -64,6 +64,7 @@
     "@adonisjs/transmit-client": "^1.0.0",
     "@adonisjs/vite": "^4.0.0",
     "@vinejs/vine": "^3.0.1",
+    "client": "link:@adonisjs/vite/client",
     "edge.js": "^6.2.1",
     "glob": "^11.0.3",
     "ioredis": "^5.7.0",

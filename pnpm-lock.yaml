@@ -44,6 +44,9 @@ importers:
       '@vinejs/vine':
         specifier: ^3.0.1
         version: 3.0.1
+      client:
+        specifier: link:@adonisjs/vite/client
+        version: link:@adonisjs/vite/client
       edge.js:
         specifier: ^6.2.1
         version: 6.3.0

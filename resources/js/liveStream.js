@@ -113,4 +113,4 @@ async function initApp() {
   await initRealtime()
 }
 
-await initApp()
+initApp()
