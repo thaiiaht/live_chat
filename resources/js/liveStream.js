@@ -1,4 +1,5 @@
 import { Transmit } from "@adonisjs/transmit-client"
+import { checkMe } from "./auth"
 
 const chatId = window.roomId
 const guestName = window.guestName

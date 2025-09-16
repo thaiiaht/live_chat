@@ -22,7 +22,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
         if (!res.ok) {
             console.log("❌ LOGIN FAILED - HTTP error")
-            alert(`Email hoặc mật khẩu không đúng!`)
+            resources/js(`Email hoặc mật khẩu không đúng!`)
             return
         }
 
@@ -68,7 +68,7 @@ function closeRegister() {
 //   // TODO: gọi API login
 // })
 
-export async function checkMe() {
+async function checkMe() {
     const token = localStorage.getItem('token');
     if(!token) return;
 

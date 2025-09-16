@@ -12,7 +12,22 @@
                 <div class="content">
                     <!-- Video Section -->
                     <div class="video-section">
-                        <div class="video-player"> <img class="player" src="/public/Image/ý.webp"></div>
+                        <div class="video-player">
+                            {{-- <img class="player" src="/public/Image/ý.webp"> --}}
+                            <video
+                                id="mp4Player"
+                                autoplay
+                                controls
+                                playsinline
+                                loop
+                                preload="auto"  
+                                width="720"
+                                aria-label="Video player"
+                                class="player"
+                            >
+                                <source src="/public/dog.mp4" type="video/mp4" />
+                            </video>
+                        </div>
                         <div class="video-info">
                             <h1 class="video-title">{{ room.roomName }}</h1>
                             <div class="video-meta">
@@ -114,8 +129,7 @@
 @endslot
 
 @slot('styles')
-    <link rel="stylesheet" href="/resources/css/liveStream.css">
-    <link rel="stylesheet" href="/resources/css/donate.css">
+    @vite(['resources/css/donate.css', 'resources/css/liveStream.css'])
 @endslot
 
 @slot('scripts')
@@ -123,8 +137,7 @@
         window.roomId = "{{ room.id }}"
         window.guestName = 'Guest_' + Math.floor(Math.random() * 10000)
     </script>
-    <script type="module" src="/resources/js/liveStream.js"></script>
-    <script src="/resources/js/donate.js"></script>
+     @vite(['resources/js/liveStream.js', 'resources/js/donate.js'])
 @endslot
 
 @end
