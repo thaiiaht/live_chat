@@ -19,6 +19,7 @@ export default defineConfig({
         'resources/js/auth.js',
         'resources/js/donate.js',
         'resources/js/liveStream.js',
+        'resources/js/home.js'
       ],
 
       /**
