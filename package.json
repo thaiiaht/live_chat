@@ -65,9 +65,11 @@
     "@adonisjs/vite": "^4.0.0",
     "@vinejs/vine": "^3.0.1",
     "edge.js": "^6.2.1",
+    "glob": "^11.0.3",
     "ioredis": "^5.7.0",
     "luxon": "^3.7.1",
     "mysql2": "^3.14.3",
+    "path": "^0.12.7",
     "reflect-metadata": "^0.2.2",
     "tailwindcss": "^4.1.11",
     "uuid": "^11.1.0"
