@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "\
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"\
             cd /var/www/html/live_chat && \
             git pull origin main && \
             chmod +x deploy.sh && \
