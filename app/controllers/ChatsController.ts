@@ -1,13 +1,24 @@
 import { HttpContext } from '@adonisjs/core/http'
 import ChatMessage from '#models/chat_message'
 import transmit from '@adonisjs/transmit/services/main'
-import Room from '#models/room'
 import Donate from '#models/donate'
+import User from '#models/user'
 
 export default class ChatsController {
-  async show({ view, params }: HttpContext) {
-    const room = await Room.findByOrFail('id', params.id)
-    return view.render('pages/liveStream', { room } )
+  async show({ view, request }: HttpContext) {
+    const user = request.body().user
+    const roomId = request.qs().roomId
+    const data = await User.findBy('id', user.id)
+    if (!data) {
+      const data = await User.create({
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        password: 'undefined',
+      })
+      return view.render('pages/chatBox', { data, roomId } ) 
+    }
+    return view.render('pages/chatBox', { data, roomId } )
   }
 
   // Lấy 50 tin mới nhất
@@ -27,10 +38,6 @@ export default class ChatsController {
   public async store({ params, request, response }: HttpContext) {
     const body = request.input('body')
     let sender = request.input('sender')
-
-    if (!sender) {
-       sender = 'Guest_' + Math.floor(Math.random() * 10000)
-    }
 
     if (!body || body.trim() === '') {
       return response.badRequest({ message: 'body is required' })

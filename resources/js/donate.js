@@ -1,6 +1,6 @@
-      import { checkMe } from "./auth";
-      const chatId = window.roomId
-      const gifts = [
+    const chatId = window.roomId
+    const guestName = window.guestName
+    const gifts = [
             { amount: 25, name: 'Cà Phê' },
             { amount: 50, name: 'Bữa Sáng' },
             { amount: 100, name: 'Bữa Trưa' },
@@ -74,25 +74,18 @@
         window.updateTotal = updateTotal
 
         export async function processDonation() {
-            let accessToken = localStorage.getItem('token')
-            if(!accessToken) {
-                alert(`Bạn cần đăng nhập để donate`)
-                return
-            }
-            let currentUser = await checkMe()
             const selectedItems = Array.from(selectedGifts).map(index => gifts[index].name);
 
             const payload = {
                 gift: JSON.stringify(selectedItems),
                 total: totalAmount,
-                sender: currentUser.fullName,
+                sender: guestName,
             };
                 await fetch(`/donate/messages/${chatId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
                     },
                     body: JSON.stringify(payload)
                 });
