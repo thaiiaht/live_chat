@@ -1,7 +1,7 @@
 
 import router from '@adonisjs/core/services/router'
 import transmit from '@adonisjs/transmit/services/main'
-import ChatsController from '#controllers/chatsController'
+import ChatsController from '#controllers/ChatsController'
 import { middleware } from './kernel.js'
 
 transmit.registerRoutes()
