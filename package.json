@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@adocasts.com/generate-models": "^0.1.0-4.dev",
+    "@adonisjs/auth": "^9.5.0",
     "@adonisjs/core": "^6.19.0",
     "@adonisjs/lucid": "^21.6.1",
     "@adonisjs/redis": "^9.2.0",
