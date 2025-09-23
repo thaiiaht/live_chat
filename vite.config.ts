@@ -10,16 +10,9 @@ export default defineConfig({
        */
       entrypoints: [
         'resources/css/app.css',
-        'resources/css/auth.css',
         'resources/css/donate.css',
-        'resources/css/home.css',
-        'resources/css/liveStream.css',
-        'resources/css/main.css',
         'resources/js/app.js',
-        'resources/js/auth.js',
         'resources/js/donate.js',
-        'resources/js/liveStream.js',
-        'resources/js/home.js'
       ],
 
       /**
