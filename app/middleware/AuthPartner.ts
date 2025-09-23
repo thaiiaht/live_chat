@@ -10,7 +10,8 @@ export default class AuthPartner {
         }
 
         try {
-            const payload = jwt.verify(token, process.env.JWT_SECRET!)
+            const JWT_SECRET = 'thaideptraibodoiqua'
+            const payload = jwt.verify(token, JWT_SECRET!)
             ctx.request.updateBody({ user: payload })
             await next()
         } catch (err) {
