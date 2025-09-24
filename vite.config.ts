@@ -21,4 +21,8 @@ export default defineConfig({
       reload: ['resources/views/**/*.edge'],
     }),
   ],
+
+  server: {
+    allowedHosts: ['client.loca.lt', 'livechat.loca.lt'],
+  },
 })
