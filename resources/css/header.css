@@ -130,19 +130,6 @@
             transform: translateY(0);
         }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .modal-content {
-                padding: 30px 25px;
-                width: 95%;
-                transform: translate(-50%, -50%);
-            }
-            
-            h2 {
-                font-size: 22px;
-            }
-        }
-
         * {
     margin: 0;
     padding: 0;
