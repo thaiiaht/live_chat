@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtn.addEventListener('click', (e) => {
       e.preventDefault()
       fetch('/auth/logout', { method: 'POST' })
-        .then(() => window.location.href = '/')
+        .then(() => window.location.href = '/home')
         .catch((err) => console.error(err))
     })
   }
