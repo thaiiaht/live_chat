@@ -7,7 +7,7 @@ import AuthController from '#controllers/authController'
 
 transmit.registerRoutes()
 
-router.get('/', async ({ view, auth }) => {
+router.get('/home', async ({ view, auth }) => {
     await auth.use('web').check()
     const partner = auth.use('web').user
     return view.render('pages/home', { partner })

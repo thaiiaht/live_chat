@@ -11,7 +11,10 @@ export default defineConfig({
       entrypoints: [
         'resources/css/app.css',
         'resources/css/donate.css',
+        'resources/css/header.css',
+        'resources/css/home.css',
         'resources/js/app.js',
+        'resources/js/auth.js',
         'resources/js/donate.js',
       ],
 
@@ -22,7 +25,4 @@ export default defineConfig({
     }),
   ],
 
-  server: {
-    allowedHosts: ['client.loca.lt', 'livechat.loca.lt'],
-  },
 })
