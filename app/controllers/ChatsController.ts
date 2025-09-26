@@ -5,7 +5,10 @@ import Donate from '#models/donate'
 import Users from '#models/user'
 
 export default class ChatsController {
-  async show({ view, request }: HttpContext) {
+  async show({ view, request, auth }: HttpContext) {
+    await auth.use('web').check()
+    const partner = auth.use('web').user
+
     const user = request.body().user
     const roomId = request.qs().roomId
     const data = await Users.findBy('id', user.id)
@@ -15,6 +18,7 @@ export default class ChatsController {
         fullName: user.fullName,
         email: user.email,
         roomId: roomId,
+        partnerId: partner?.id,
       })
       return view.render('pages/chatBox', { data, roomId } ) 
     }
@@ -115,6 +119,18 @@ export default class ChatsController {
     } catch {
       return response.badRequest(' Try Again ')
     }
+  }
 
+  async unblock({ request, response}: HttpContext) {
+    try {
+      const {senderId} = await request.only(['senderId'])
+      const data = await Users.findByOrFail('id', senderId)
+      data.status = 'active',
+      await data.save()
+
+      return response.json({ success: true })
+      } catch {
+      return response.badRequest(' Try Again ')
+    }
   }
 }

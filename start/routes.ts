@@ -4,6 +4,7 @@ import transmit from '@adonisjs/transmit/services/main'
 import ChatsController from '#controllers/ChatsController'
 import { middleware } from './kernel.js'
 import AuthController from '#controllers/authController'
+import UserController from '#controllers/UserController'
 
 transmit.registerRoutes()
 
@@ -30,3 +31,13 @@ router.get('/chats/messages/:id', [ChatsController, 'index'])
 router.post('/chats/messages/:id', [ChatsController, 'store'])
 router.post('/donate/messages/:id', [ChatsController, 'donate'])
 router.patch('/block', [ChatsController, 'block'])
+router.patch('/unblock', [ChatsController, 'unblock'])
+
+
+// User Management
+router.group(() => {
+    router.get('/', [UserController, 'UserPage']).as('userPage')
+    router.get('/block', [UserController, 'BlockPage']).as('blockPage')
+})
+.as('user')
+.prefix('user')

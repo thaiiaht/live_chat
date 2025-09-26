@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    @vite(['resources/css/user.css', 'resources/css/home.css'])
+    @vite(['resources/css/header.css', 'resources/js/auth.js', 'resources/js/user.js'])
+</head>
+<body>
+    <header>
+         <nav>
+            <div class="logo">
+                <a href="/home">NewsFeed</a>
+            </div>
+            <div class="select">
+                <button class="header-btn" >
+                    <a href="/user">Quản lý User</a>
+                </button>
+                <button class="header-btn" >
+                    <a href="/user/block">User have been blocked</a>
+                </button>
+                <button class="header-btn" >Từ Cấm</button>
+            </div>
+            <div class="user-menu">
+            {{-- user --}}
+            @if(partner)
+                <div id="userDiv" >
+                    <p>Welcome, {{ partner.partnerName }} </span> ! 
+                        <a id="logoutBtn" href="#">Logout</a>
+                    </p>
+                </div>
+            @else
+            {{-- Login --}}
+                <div id="loginDiv">
+                    <!-- Nút mở popup -->
+                    <button class="header-btn" onclick="openLogin()">Đăng nhập</button>
+                    <!-- Popup (ẩn mặc định) -->
+                    <div id="loginModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeLogin()">&times;</span>
+                            <h2>Đăng nhập</h2>
+                            <form class="login-form" id="loginForm">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input class="input-login" type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu</label>
+                                <input class="input-login" type="password" id="password" required>
+                            </div> 
+                                <button class="btn-login" type="submit">Đăng nhập</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{-- Register --}}
+                <div id="registerDiv">
+                                    <!-- Nút mở popup -->
+                    <button class="header-btn" onclick="openRegister()">Đăng ký</button>
+                    <!-- Popup (ẩn mặc định) -->
+                    <div id="registerModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeRegister()">&times;</span>
+                            <h2>Đăng ký</h2>
+                            <form class="login-form" id="registerForm"  method="post" action="/auth/register">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input class="input-login" type="text" id="fullName" required>
+                            </div>   
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input class="input-login" type="email" id="emailR" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu</label>
+                                <input class="input-login" type="password" id="passwordR" required>
+                            </div> 
+                                <button class="btn-login" type="submit">Đăng ký</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Danh sách người dùng của site {{ partner.partnerName}}</h1>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Room Id</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                 @each(user in data)
+                <tbody >
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.fullName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.roomId }}</td>
+                        <td class="role-{{ user.role }}">
+                        {{ user.role === 'admin' ? 'Quản trị viên' : (user.role === 'moderator' ? 'Điều hành viên' : 'Người dùng') }}
+                        </td>
+                        <td> {{ user.status }} </td>
+                        <td>
+                            <button class="btn-unblock" data-id="{{ user.id }}" data-name="{{ user.fullName }}"> unblock </button>
+                        </td>
+                </tbody>
+                @endeach
+            </table>
+        </div>
+    </main>
+
+</body>
+
+</html>

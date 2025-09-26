@@ -13,9 +13,11 @@ export default defineConfig({
         'resources/css/donate.css',
         'resources/css/header.css',
         'resources/css/home.css',
+        'resources/css/user.css',
         'resources/js/app.js',
         'resources/js/auth.js',
         'resources/js/donate.js',
+        'resources/js/user.js',
       ],
 
       /**
