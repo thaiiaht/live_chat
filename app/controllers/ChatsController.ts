@@ -2,19 +2,19 @@ import { HttpContext } from '@adonisjs/core/http'
 import ChatMessage from '#models/chat_message'
 import transmit from '@adonisjs/transmit/services/main'
 import Donate from '#models/donate'
-import User from '#models/user'
+import Users from '#models/user'
 
 export default class ChatsController {
   async show({ view, request }: HttpContext) {
     const user = request.body().user
     const roomId = request.qs().roomId
-    const data = await User.findBy('id', user.id)
+    const data = await Users.findBy('id', user.id)
     if (!data) {
-      const data = await User.create({
+      const data = await Users.create({
         id: user.id,
         fullName: user.fullName,
         email: user.email,
-        password: 'undefined',
+        roomId: roomId,
       })
       return view.render('pages/chatBox', { data, roomId } ) 
     }
@@ -38,7 +38,7 @@ export default class ChatsController {
   public async store({ params, request, response }: HttpContext) {
     const body = request.input('body')
     let sender = request.input('sender')
-
+    const senderId = request.input('senderId')
     if (!body || body.trim() === '') {
       return response.badRequest({ message: 'body is required' })
     }
@@ -46,6 +46,7 @@ export default class ChatsController {
     const msg = await ChatMessage.create({ 
         roomId: params.id,
         sender: sender,
+        senderId: senderId,
         body: body,
         type: 'user',
     })
@@ -55,6 +56,7 @@ export default class ChatsController {
       id: msg.id,
       roomId: msg.roomId,
       sender: msg.sender,
+      senderId: msg.senderId,
       body: msg.body,
       createdAt: msg.createdAt.toISO(),
       type: 'user',
@@ -88,6 +90,31 @@ export default class ChatsController {
       createdAt: msg.createdAt.toISO(),
       type: 'system',
     })
+  }
+
+  // Block
+  async block({ request, response }: HttpContext) {
+    try {
+      const {senderId} = await request.only(['senderId'])
+      const data = await Users.findByOrFail('id', senderId)
+      data.status = 'block',
+      await data.save()
+
+      await ChatMessage.query()
+        .where('senderId', senderId)
+        .delete()
+
+      transmit.broadcast('messages: deleted', { senderId })
+
+      transmit.broadcast(`/user/${senderId}`, {
+        type: 'blocked',
+        message: 'Bạn đã bị block bởi mod',
+      })
+
+      return response.json({ success: true })
+    } catch {
+      return response.badRequest(' Try Again ')
+    }
 
   }
 }

@@ -4,12 +4,11 @@ import type { InferAuthenticators, InferAuthEvents, Authenticators } from '@adon
 
 const authConfig = defineConfig({
   default: 'web',
-  // guards admin
   guards: {
     web: sessionGuard({
       useRememberMeTokens: false,
       provider: sessionUserProvider({
-        model: () => import('#models/user'),
+        model: () => import('#models/partner')
       }),
     }),
   },

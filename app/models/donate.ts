@@ -25,7 +25,7 @@ export default class Donate extends BaseModel {
   declare updatedAt: DateTime | null
 
   @beforeCreate()
-  public static assignUuid( donates: Donate) {
-    donates.id = uuidv4()
+  public static assginUuid( donate: Donate) {
+    donate.id = uuidv4()
   }
 }

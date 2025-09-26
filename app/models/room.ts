@@ -1,25 +1,19 @@
-import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import { v4 as uuidv4 } from 'uuid'
 
 export default class Room extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
   @column()
-  declare roomName: string
+  declare roomName: string | null
 
   @column()
-  declare venue: string
+  declare partnerId: string | null
 
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime 
+  declare createdAt: DateTime | null
 
-  @column.dateTime()
-  declare endAt: DateTime 
-
-  @beforeCreate()
-  public static assignUuid( rooms: Room) {
-    rooms.id = uuidv4()
-  }
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
 }

@@ -10,10 +10,13 @@ export default class ChatMessage extends BaseModel {
   declare roomId: string
 
   @column()
-  declare type: 'user' | 'system'
+  declare type: string
 
   @column()
   declare sender: string
+
+  @column()
+  declare senderId: string
 
   @column()
   declare body: string
@@ -22,7 +25,7 @@ export default class ChatMessage extends BaseModel {
   declare createdAt: DateTime
 
   @beforeCreate()
-  public static assignUuid(chat: ChatMessage) {
+  public static assignUuid( chat: ChatMessage) {
     chat.id = uuidv4()
   }
 }
