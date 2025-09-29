@@ -10,6 +10,7 @@
             <div class="logo">
                 <a href="/home">NewsFeed</a>
             </div>
+            @if(partner)
             <div class="select">
                 <button class="header-btn" >
                     <a href="/user">Quản lý User</a>
@@ -19,15 +20,14 @@
                 </button>
                 <button class="header-btn" >Từ Cấm</button>
             </div>
-            <div class="user-menu">
             {{-- user --}}
-            @if(partner)
                 <div id="userDiv" >
                     <p>Welcome, {{ partner.partnerName }} </span> ! 
-                        <a id="logoutBtn" href="#">Logout</a>
+                        <a class="userDiv-a" id="logoutBtn" href="#">Logout</a>
                     </p>
                 </div>
             @else
+            <div class="user-menu">
             {{-- Login --}}
                 <div id="loginDiv">
                     <!-- Nút mở popup -->
@@ -78,14 +78,16 @@
                         </div>
                     </div>
                 </div>
-                @endif
             </div>
+            @endif
         </nav>
     </header>
 
     <main>
         <iframe
-        src="https://livechat.buildit.sbs/chats/embed?roomId=game123&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjU0NiwiZnVsbE5hbWUiOiJUZXN0ZXItMiIsImVtYWlsIjoidGhhaTM5OUBleGFtcGxlLmNvbSIsImlhdCI6MTc1ODg4NDc4OX0.MXK-V79yUlVDjH6F5AGtZtJ_RLidmlj6eC0_k5aOowM"
+        src="http://localhost:3333/chats/embed?roomId=game123&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUyMzUyLCJmdWxsTmFtZSI6
+IlRlc3RlciIsImVtYWlsIjoidGhhaVNERjJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTg3OTM2NjZ9.Qgh8GGXEx
+DOBYXyKf2NIx7l0waNa4lljR39a0sQNsTs"
         class="iframe-chat"
         >
         </iframe>

@@ -10,6 +10,7 @@
             <div class="logo">
                 <a href="/home">NewsFeed</a>
             </div>
+            @if(partner)
             <div class="select">
                 <button class="header-btn" >
                     <a href="/user">Quản lý User</a>
@@ -21,7 +22,6 @@
             </div>
             <div class="user-menu">
             {{-- user --}}
-            @if(partner)
                 <div id="userDiv" >
                     <p>Welcome, {{ partner.partnerName }} </span> ! 
                         <a id="logoutBtn" href="#">Logout</a>
