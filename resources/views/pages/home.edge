@@ -84,14 +84,21 @@
     </header>
 
     <main>
-        <iframe
-        src="https://livechat.buildit.sbs/chats/embed?roomId=game123&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUyMzUyLCJmdWxsTmFtZSI6
-IlRlc3RlciIsImVtYWlsIjoidGhhaVNERjJAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTg3OTM2NjZ9.Qgh8GGXEx
-DOBYXyKf2NIx7l0waNa4lljR39a0sQNsTs"
-        class="iframe-chat"
-        >
-        </iframe>
+        <iframe id="myFrame" src="https://livechat.buildit.sbs/chats/embed" class="iframe-chat"></iframe>
     </main>
+    <script>
+          window.addEventListener('message', (event) => {
+            const { type } = event.data || {}
+            if (type === 'ready') {
+              console.log('✅ Iframe chat đã sẵn sàng!')
+              const iframe = document.getElementById('myFrame')
+              iframe.contentWindow.postMessage({
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nzg5LCJmdWxsTmFtZSI6IkhhY2tlciBM4buPIiwiZW1haWwiOiJzZGZzQGV4YW1wbGUuY29tIiwiaWF0IjoxNzYwMDg1MDc4fQ.LynyBFqJbBJXqSZIP0YAUdtpPrW3xSuw-cRx5Bxl8YE',
+                roomId: 'room123'
+              }, '*')   
+            } 
+          })
+    </script>
 </body>
 
 </html>
