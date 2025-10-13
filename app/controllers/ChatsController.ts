@@ -46,6 +46,7 @@ export default class ChatsController {
           return response.json({
             status: 'ok',
             user,
+            key: process.env.JWT_SECRET
           })
         } catch (error) {
           return response.badRequest({ status: 'error', message: 'Invalid token', error })
