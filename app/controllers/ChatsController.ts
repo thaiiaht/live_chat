@@ -5,6 +5,7 @@ import Users from '#models/user'
 import jwt from 'jsonwebtoken'
 import Donate from '#models/donate'
 import { Filter } from 'bad-words'
+import env from '#start/env'
 const filter = new Filter();
 filter.addWords('dm', 'đm', 'cc', 'cl', 'vl', 'địt', 'cặc', 'lồn', 'bitch', 'fuck')
 
