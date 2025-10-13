@@ -27,7 +27,7 @@ window.addEventListener('message', async (event) => {
     const res = await fetch('/join', {
         method: 'POST',
         headers: { 'content-Type': 'application/json' },
-        body: JSON.stringify({ ownToken, roomId }),
+        body: JSON.stringify({ token, roomId }),
     })
     const data = await res.json()
     if (data.status === 'ok') { 
