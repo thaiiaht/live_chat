@@ -15,9 +15,10 @@ export default class ChatsController {
 
   async join({ request, response }: HttpContext) {
       const { token, roomId } = request.only(['token', 'roomId'])
+      console.log({key: process.env.JWT_SECRET})
        try {
         const JWT_SECRET='thaideptraibodoiqua'
-        const user = jwt.verify(token, JWT_SECRET!) as {
+        const user = jwt.verify(token, process.env.JWT_SECRET!) as {
           id: string
           email: string
           fullName: string
