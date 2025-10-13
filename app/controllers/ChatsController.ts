@@ -14,7 +14,7 @@ export default class ChatsController {
   }
 
   async join({ request, response }: HttpContext) {
-      const { roomId, token } = request.only(['roomId', 'token'])
+      const { token, roomId } = request.only(['token', 'roomId'])
        try {
         const user = jwt.verify(token, process.env.JWT_SECRET!) as {
           id: string
