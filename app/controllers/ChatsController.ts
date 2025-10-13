@@ -13,9 +13,10 @@ export default class ChatsController {
     return view.render('pages/chatBox')
   }
 
-  async join({ request, response }: HttpContext) {
+  async join({ request, response, auth }: HttpContext) {
       const { token, roomId } = request.only(['token', 'roomId'])
-      console.log({key: process.env.JWT_SECRET})
+      await auth.use('web').check()
+      const partner = auth.use('web').user
        try {
         const user = jwt.verify(token, process.env.JWT_SECRET!) as {
           id: string
@@ -30,6 +31,7 @@ export default class ChatsController {
               email: user.email,
               fullName: user.fullName,
               roomId: roomId,
+              partnerId: partner?.id,
             })
           }
           transmit.broadcast(`join/${token}`, {
