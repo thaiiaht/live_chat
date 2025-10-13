@@ -15,7 +15,7 @@ let ownToken = null
 
   window.addEventListener('DOMContentLoaded', () => {
     console.log('Chat iframe loaded')
-    window.parent.postMessage({ type: 'ready' }, 'https://livechat.buildit.sbs')
+    window.parent.postMessage({ type: 'ready' }, '*')
   })
 
 window.addEventListener('message', async (event) => {
@@ -27,7 +27,7 @@ window.addEventListener('message', async (event) => {
     const res = await fetch('/join', {
         method: 'POST',
         headers: { 'content-Type': 'application/json' },
-        body: JSON.stringify({ token, roomId }),
+        body: JSON.stringify({ ownToken, roomId }),
     })
     const data = await res.json()
     if (data.status === 'ok') { 
