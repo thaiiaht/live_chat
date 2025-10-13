@@ -18,6 +18,9 @@ export default class Users extends BaseModel {
   declare partnerId: string
 
   @column()
+  declare role: 'user' | 'admin'
+
+  @column()
   declare status: 'active' | 'block'
 
   @column.dateTime({ autoCreate: true })

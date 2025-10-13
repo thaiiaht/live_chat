@@ -1,29 +1,60 @@
 import { HttpContext } from '@adonisjs/core/http'
 import ChatMessage from '#models/chat_message'
 import transmit from '@adonisjs/transmit/services/main'
-import Donate from '#models/donate'
 import Users from '#models/user'
+import jwt from 'jsonwebtoken'
+import Donate from '#models/donate'
+import { Filter } from 'bad-words'
+const filter = new Filter();
+filter.addWords('dm', 'đm', 'cc', 'cl', 'vl', 'địt', 'cặc', 'lồn', 'bitch', 'fuck')
 
 export default class ChatsController {
-  async show({ view, request, auth }: HttpContext) {
-    await auth.use('web').check()
-    const partner = auth.use('web').user
-
-    const user = request.body().user
-    const roomId = request.qs().roomId
-    const data = await Users.findBy('id', user.id)
-    if (!data) {
-      const data = await Users.create({
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-        roomId: roomId,
-        partnerId: partner?.id,
-      })
-      return view.render('pages/chatBox', { data, roomId } ) 
-    }
-    return view.render('pages/chatBox', { data, roomId } )
+  async show({ view }: HttpContext) {
+    return view.render('pages/chatBox')
   }
+
+  async join({ request, response, auth }: HttpContext) {
+      await auth.use('web').check()
+      const partner = auth.use('web').user
+      const { roomId, token } = request.only(['roomId', 'token'])
+       try {
+        const user = jwt.verify(token, process.env.JWT_SECRET!) as {
+          id: string
+          email: string
+          fullName: string
+        }
+        console.log(roomId)
+        const data = await Users.query().where('id', user.id).first()
+          if (!data) {
+            await Users.create({
+              id: user.id,
+              email: user.email,
+              fullName: user.fullName,
+              roomId: roomId,
+              partnerId: partner?.id,
+            })
+          }
+          transmit.broadcast(`join/${token}`, {
+            event: 'user_joined',
+            data: {
+              id: user.id,
+              sender: user.fullName,
+              email: user.email,
+              role: data!.role,
+            },
+          })
+
+          return response.json({
+            status: 'ok',
+            user,
+          })
+        } catch (error) {
+          return response.badRequest({ status: 'error', message: 'Invalid token' })
+        }
+      }
+
+
+
 
   // Lấy 50 tin mới nhất
   public async index({ params, response }: HttpContext) {
@@ -46,12 +77,12 @@ export default class ChatsController {
     if (!body || body.trim() === '') {
       return response.badRequest({ message: 'body is required' })
     }
-
+    const cleanBody = filter.clean(body)
     const msg = await ChatMessage.create({ 
         roomId: params.id,
         sender: sender,
         senderId: senderId,
-        body: body,
+        body: cleanBody,
         type: 'user',
     })
 
@@ -71,7 +102,7 @@ export default class ChatsController {
 
   // Donate
   async donate({ request, params}: HttpContext) {
-    const req = await request.only(['sender', 'gift', 'total'])
+    const req = await request.only(['sender', 'gift', 'total', 'senderId'])
     await Donate.create({
       userName: req.sender,
       totalMoney: req.total,
@@ -82,6 +113,7 @@ export default class ChatsController {
     const msg = await ChatMessage.create({ 
         roomId: params.id,
         sender: req.sender,
+        senderId: req.senderId,
         body: ` ${req.sender} đã donate ${req.total}K VNĐ! `,
         type: 'system',
     })

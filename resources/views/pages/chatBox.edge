@@ -3,7 +3,7 @@
     <head>
         <title> Chat Box</title>
         @vite(['resources/css/app.css' , 'resources/css/donate.css'])
-        @vite(['resources/js/app.js', 'resources/js/donate.js'])
+        @vite(['resources/js/app.js'])
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
     <body>
@@ -22,7 +22,6 @@
                     </div>
                 </div>
                     <form id="form" class="chat-input-section">
-                    @if( data.status == 'active')
                     <input id="body" type="text" class="chat-input" autocomplete="off" placeholder="Say something..." >
                     <div class="donate-container">
                         <button type="button" class="donate-trigger" onclick="toggleDonationCard()">
@@ -98,20 +97,12 @@
                     <button type="submit" class="chat-send">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
-                    @else
-                    <p style="padding-left: 100px;"> You have been blocked </p>
-                    @endif
                     </form>
                     
                     
             </div>
         </div>
 
-    <script>
-        window.roomId = "{{ roomId }}"
-        window.guestName = "{{ data.fullName }}"
-        window.senderId = "{{ data.id }}"
-    </script>
-    
+
     </body> 
 </html>

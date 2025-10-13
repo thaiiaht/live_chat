@@ -8,17 +8,53 @@ window.closeChat = function () {
   document.getElementById('chatTrigger').style.display = 'block'
 }
 
+
+// Post Message
+let chatId = null
+let ownToken = null
+
+  window.addEventListener('DOMContentLoaded', () => {
+    console.log('Chat iframe loaded')
+    window.parent.postMessage({ type: 'ready' }, '*')
+  })
+
+window.addEventListener('message', async (event) => {
+    const { roomId, token } = event.data
+    console.log( token )
+    ownToken = token
+    chatId = roomId
+    await listenUser()
+    const res = await fetch('/join', {
+        method: 'POST',
+        headers: { 'content-Type': 'application/json' },
+        body: JSON.stringify({ token, roomId }),
+    })
+    const data = await res.json()
+    if (data.status === 'ok') { 
+        initApp()
+    }
+})
+
+let currentUser = null 
+
 import { Transmit } from "@adonisjs/transmit-client"
-
-
-const chatId = window.roomId
-const form = document.getElementById('form')
-const bodyInput = document.getElementById('body')
-const guestName = window.guestName
-const senderId = window.senderId
-const messagesEl = document.getElementById('messages')
 const transmit = new Transmit({ baseUrl: window.location.origin })
 
+async function listenUser() {
+  const sub = transmit.subscription(`join/${ownToken}`)
+  sub.onMessage((msg) => { 
+    if ( msg.event === 'user_joined') {
+      currentUser = msg.data
+      console.log( currentUser)
+     }})
+  await sub.create()
+    
+}
+// Transmit
+
+const form = document.getElementById('form')
+const bodyInput = document.getElementById('body')
+const messagesEl = document.getElementById('messages')
 
 // Load 50 tin nhắn đầu 
 async function loadHistory() {
@@ -31,8 +67,10 @@ async function loadHistory() {
   }
 }
 
+
 // Subscribe realtime
 async function initRealtime() {
+
 try {
    // Subcribe kênh chat chung
   const subscription = transmit.subscription(`/chats/messages/${chatId}`)
@@ -41,7 +79,7 @@ try {
   await subscription.create()
 
   // Subcribe kênh riêng của user hiện tại
-  const userSub = transmit.subscription(`/user/${senderId}`)
+  const userSub = transmit.subscription(`/user/${currentUser.id}`)
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
@@ -49,18 +87,61 @@ try {
       }
     })
     await userSub.create()
-  
+
     // Kênh xoá tin nhắn
-    const deletedSub = transmit.subscription('messages: deleted')
+  const deletedSub = transmit.subscription('messages: deleted')
     deletedSub.onMessage(({ senderId }) => {
       document.querySelectorAll(`[data-sender="${senderId}"]`).forEach(el => el.remove())
     })
-    await deletedSub.create()
+    await deletedSub.create() 
   }
   catch (err) {
     console.error('Subscription failed', err)
   }
 }
+import { Filter } from 'bad-words'
+const filter = new Filter();
+const bannedWords = [
+  'dm', 'đm', 'địt', 'dit', 'ditme', 'đụ', 'đụmẹ', 'đụ má', 'cl', 'cc', 'vl',
+  'cặc', 'lon', 'lồn', 'bitch', 'fuck', 'shit', 'ngu', 'vcl', 'óc'
+]
+
+// Hàm bỏ dấu (để so sánh không phân biệt dấu)
+function removeDiacritics(str) {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+}
+
+// ✅ Hàm lọc tiếng Việt + chặn link
+function censorVietnamese(text) {
+  let censored = text
+  const textNoDiacritics = removeDiacritics(text.toLowerCase())
+
+  // 🔹 1. Chặn từ cấm
+  bannedWords.forEach((bad) => {
+    const badNoDiacritics = removeDiacritics(bad)
+    const regex = new RegExp(`\\b${badNoDiacritics}\\b`, 'gi')
+    if (regex.test(textNoDiacritics)) {
+      const stars = '*'.repeat(bad.length)
+      const replaceRegex = new RegExp(bad, 'gi')
+      censored = censored.replace(replaceRegex, stars)
+      // thay cả bản không dấu
+      const replaceRegexNoSign = new RegExp(badNoDiacritics, 'gi')
+      censored = censored.replace(replaceRegexNoSign, stars)
+    }
+  })
+
+  // 🔹 2. Chặn link
+  const linkRegex =
+    /((https?:\/\/)|(www\.)|([a-zA-Z0-9-]+\.[a-z]{2,}))(\S*)/gi
+  censored = censored.replace(linkRegex, '[link blocked 🔒]')
+
+  return censored
+}
+
 
 // Gửi tin nhắn
 form.addEventListener('submit', async (e) => {
@@ -69,19 +150,19 @@ form.addEventListener('submit', async (e) => {
   if (!body) {
     return
   }
+  const cleanBody = censorVietnamese(body)
   try {
+    console.log( currentUser )
     const res = await fetch(`/chats/messages/${chatId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: senderId, sender: guestName, body })
+      body: JSON.stringify({ senderId: currentUser.id, sender: currentUser.sender, body: cleanBody })
     })
   if (res.ok) bodyInput.value = ''
   } catch (err) {
     console.error(err)
   }
 })
-
-
 
 // Render message
 function appendMessage(msg) {
@@ -90,27 +171,31 @@ function appendMessage(msg) {
     el.setAttribute('data-sender', msg.senderId || '')
       el.classList.add('user-message')
       el.style.color = 'black'
-      el.innerHTML = `<div><i class="fa-solid fa-circle-user fa-xl"></i>
-      <small>${new Date(msg.createdAt).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      })}</small>
-        <b>${escapeHtml(msg.sender)}</b> <p>${escapeHtml(msg.body)}</p></div> 
-          <div class="more-btn" onclick="toggleMenu(this)">⋮
-            <div class="menu">
-                <div class="setMod" onclick="setMod()">
-                  <i class="fa-solid fa-wrench" style="color: #74C0FC;"></i>
-                  Set Mod
-                </div>
-                <div class="block" onclick="blockUser('${msg.senderId}', '${escapeHtml(msg.sender)}')">
-                  <i class="fa-solid fa-ban"></i>
-                  Block
-                </div>
-            </div>
-        </div>
-        `
-  } 
-  else {
+    if ( currentUser.role === 'admin') {
+        el.innerHTML = `<div><i class="fa-solid fa-circle-user fa-xl"></i>
+        <small>${new Date(msg.createdAt).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit'
+        })}</small>
+          <b>${escapeHtml(msg.sender)}</b> <p>${escapeHtml(msg.body)}</p></div> 
+            <div class="more-btn" onclick="toggleMenu(this)">⋮
+              <div class="menu">
+                  <div class="block" onclick="blockUser('${msg.senderId}', '${escapeHtml(msg.sender)}')">
+                    <i class="fa-solid fa-ban"></i>
+                    Block
+                  </div>
+              </div>
+          </div>
+          `
+    } else {
+        el.innerHTML = `<div><i class="fa-solid fa-circle-user fa-xl"></i>
+        <small>${new Date(msg.createdAt).toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit'
+        })}</small>
+          <b>${escapeHtml(msg.sender)}</b> <p>${escapeHtml(msg.body)}</p></div> `
+    }
+  } else {
   el.classList.add('donate-message');
   el.innerHTML = `<small>${new Date(msg.createdAt).toLocaleTimeString([], {
     hour: '2-digit',
@@ -170,11 +255,6 @@ window.closeAllMenus = function() {
   });
 }
 
-window.setMod = function () {
-  alert('Đã set mod!');
-  closeAllMenus();
-}
-
 window.blockUser= async function (targetId, targetName) {
   const res = await fetch('/block', {
     method: 'PATCH',
@@ -190,6 +270,7 @@ window.blockUser= async function (targetId, targetName) {
 messagesEl.appendChild(el)
 messagesEl.scrollTop = messagesEl.scrollHeight
 }
+
 // Escape XSS
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) =>
@@ -203,4 +284,114 @@ async function initApp() {
   await initRealtime()
 }
 
-initApp()
+
+// donate 
+    const gifts = [
+            { amount: 25, name: 'Cà Phê' },
+            { amount: 50, name: 'Bữa Sáng' },
+            { amount: 100, name: 'Bữa Trưa' },
+            { amount: 200, name: 'Game Mới' },
+            { amount: 500, name: 'Setup' },
+            { amount: 1000, name: 'Mega' }
+        ];
+
+        let selectedGifts = new Set();
+        let totalAmount = 0;
+        let isCardOpen = false;
+
+        export function toggleDonationCard() {
+            const card = document.getElementById('donationCard');
+            
+            if (isCardOpen) {
+                closeDonationCard();
+            } else {
+                card.classList.add('show');
+                isCardOpen = true;
+            }
+        }
+
+        window.toggleDonationCard = toggleDonationCard
+
+        export function closeDonationCard() {
+            const card = document.getElementById('donationCard');
+            card.classList.remove('show');
+            isCardOpen = false;
+        }
+
+        window.closeDonationCard = closeDonationCard
+
+        export function selectGift(index, element) {
+            const gift = gifts[index];
+            
+            if (selectedGifts.has(index)) {
+                selectedGifts.delete(index);
+                element.classList.remove('selected');
+                totalAmount -= gift.amount;
+            } else {
+                selectedGifts.add(index);
+                element.classList.add('selected');
+                totalAmount += gift.amount;
+            }
+            
+            updateTotal();
+        }
+
+        window.selectGift = selectGift
+
+        export function updateTotal() {
+            const totalElement = document.getElementById('totalAmount');
+            const donateBtn = document.getElementById('donateBtn');
+            
+            if (totalAmount >= 1000) {
+                totalElement.textContent = (totalAmount / 1000) + 'M';
+            } else {
+                totalElement.textContent = totalAmount + 'K';
+            }
+            
+            if (totalAmount > 0) {
+                donateBtn.disabled = false;
+                donateBtn.textContent = 'Donate';
+            } else {
+                donateBtn.disabled = true;
+                donateBtn.textContent = 'Chọn quà';
+            }
+        }
+
+        window.updateTotal = updateTotal
+
+        export async function processDonation() {
+            const selectedItems = Array.from(selectedGifts).map(index => gifts[index].name);
+
+            const payload = {
+                gift: JSON.stringify(selectedItems),
+                total: totalAmount,
+                sender: currentUser.sender,
+                senderId: currentUser.id,
+            };
+                await fetch(`/donate/messages/${chatId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                closeDonationCard();
+        }
+
+        window.processDonation = processDonation
+
+        // Đóng khi click bên ngoài
+        document.addEventListener('click', function(event) {
+            const container = document.querySelector('.donate-container');
+            if (isCardOpen && !container.contains(event.target)) {
+                closeDonationCard();
+            }
+        });
+
+        // Đóng khi nhấn ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && isCardOpen) {
+                closeDonationCard();
+            }
+        });
