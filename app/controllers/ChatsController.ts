@@ -17,7 +17,6 @@ export default class ChatsController {
       const { token, roomId } = request.only(['token', 'roomId'])
       console.log({key: process.env.JWT_SECRET})
        try {
-        const JWT_SECRET='thaideptraibodoiqua'
         const user = jwt.verify(token, process.env.JWT_SECRET!) as {
           id: string
           email: string
