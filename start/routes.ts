@@ -2,7 +2,6 @@
 import router from '@adonisjs/core/services/router'
 import transmit from '@adonisjs/transmit/services/main'
 import ChatsController from '#controllers/ChatsController'
-import { middleware } from './kernel.js'
 import AuthController from '#controllers/authController'
 import UserController from '#controllers/UserController'
 
@@ -13,6 +12,11 @@ router.get('/home', async ({ view, auth }) => {
     const partner = auth.use('web').user
     return view.render('pages/home', { partner })
 })
+
+router.get('/test', async ({ view  }) => {
+    return view.render('pages/test')
+})
+
 
 // Auth
 router.group(() => {
@@ -26,7 +30,8 @@ router.group(() => {
 
 
 // API chat messages
-router.get('/chats/embed', [ChatsController, 'show']).use(middleware.partner())
+router.get('/chats/embed', [ChatsController, 'show'])
+router.post('/join', [ChatsController, 'join'])
 router.get('/chats/messages/:id', [ChatsController, 'index'])
 router.post('/chats/messages/:id', [ChatsController, 'store'])
 router.post('/donate/messages/:id', [ChatsController, 'donate'])
