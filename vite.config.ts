@@ -14,10 +14,12 @@ export default defineConfig({
         'resources/css/header.css',
         'resources/css/home.css',
         'resources/css/user.css',
+        'resources/css/emoji.css',
         'resources/js/app.js',
         'resources/js/auth.js',
         'resources/js/donate.js',
         'resources/js/user.js',
+        'resources/js/emoji.js',
       ],
 
       /**

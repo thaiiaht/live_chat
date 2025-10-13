@@ -2,8 +2,8 @@
 <html>
     <head>
         <title> Chat Box</title>
-        @vite(['resources/css/app.css' , 'resources/css/donate.css'])
-        @vite(['resources/js/app.js'])
+        @vite(['resources/css/app.css' , 'resources/css/donate.css', 'resources/css/emoji.css'])
+        @vite(['resources/js/chat.js', 'resources/js/emoji.js'])
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
     <body>
@@ -22,83 +22,34 @@
                     </div>
                 </div>
                     <form id="form" class="chat-input-section">
-                    <input id="body" type="text" class="chat-input" autocomplete="off" placeholder="Say something..." >
-                    <div class="donate-container">
-                        <button type="button" class="donate-trigger" onclick="toggleDonationCard()">
-                            <i class="fa-sharp fa-solid fa-circle-dollar-to-slot"></i>
+                        <input id="body" type="text" class="chat-input" autocomplete="off" placeholder="Say something..." >
+                        <button type="button" class="emoji-btn" id="emojiBtn">
+                            <i class="fa-regular fa-face-smile fa-xl"></i>
                         </button>
-                        <div class="donation-card" id="donationCard">
-                            <div class="card-header">
-                                <button class="close-btn" onclick="closeDonationCard()">&times;</button>
-                                <div class="card-title">Donate</div>
-                            </div>
 
-                            <div class="gifts-container">
-                                <div class="gift-item" onclick="selectGift(0, this)">
-                                    <div class="gift-icon">☕</div>
-                                    <div class="gift-info">
-                                        <div class="gift-name">Cà Phê</div>
-                                        <div class="gift-amount">25K</div>
-                                    </div>
-                                </div>
-
-                                <div class="gift-item" onclick="selectGift(1, this)">
-                                    <div class="gift-icon">🍜</div>
-                                    <div class="gift-info">
-                                        <div class="gift-name">Bữa Sáng</div>
-                                        <div class="gift-amount">50K</div>
-                                    </div>
-                                </div>
-
-                                <div class="gift-item" onclick="selectGift(2, this)">
-                                    <div class="gift-icon">🍕</div>
-                                    <div class="gift-info">
-                                        <div class="gift-name">Bữa Trưa</div>
-                                        <div class="gift-amount">100K</div>
-                                    </div>
-                                </div>
-
-                                <div class="gift-item" onclick="selectGift(3, this)">
-                                    <div class="gift-icon">🎮</div>
-                                    <div class="gift-info">
-                                        <div class="gift-name">Game Mới</div>
-                                        <div class="gift-amount">200K</div>
-                                    </div>
-                                </div>
-
-                                <div class="gift-item" onclick="selectGift(4, this)">
-                                    <div class="gift-icon">🖥️</div>
-                                    <div class="gift-info">
-                                        <div class="gift-name">Setup</div>
-                                        <div class="gift-amount">500K</div>
-                                    </div>
-                                </div>
-
-                                <div class="gift-item" onclick="selectGift(5, this)">
-                                    <div class="gift-icon">🚀</div>
-                                    <div class="gift-info">
-                                        <div class="gift-name">Mega</div>
-                                        <div class="gift-amount">1M</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-footer">
-                                <div class="total-display">
-                                    <span class="total-label">Tổng:</span>
-                                    <span class="total-amount" id="totalAmount">0K</span>
-                                </div>
-                                <button class="donate-btn" id="donateBtn" onclick="processDonation()" disabled>
-                                    Chọn quà
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="chat-send">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
+                        <button type="submit" class="chat-send">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
                     </form>
-                    
+                        <div class="emoji-picker" id="emojiPicker">
+
+            <div class="category-header" id="categoryHeader">
+                <span id="categoryIcon">😊</span>
+                <span id="categoryName">Mặt cười và hình người</span>
+            </div>
+
+            <div class="emoji-grid" id="emojiGrid"></div>
+
+            <div class="categories">
+                <button class="category-btn active" data-category="smileys" title="Mặt cười">😊</button>
+                <button class="category-btn" data-category="people" title="Con người">👋</button>
+                <button class="category-btn" data-category="animals" title="Động vật">🐶</button>
+                <button class="category-btn" data-category="food" title="Đồ ăn">🍕</button>
+                <button class="category-btn" data-category="travel" title="Du lịch">✈️</button>
+                <button class="category-btn" data-category="activities" title="Hoạt động">⚽</button>
+                <button class="category-btn" data-category="objects" title="Đồ vật">💡</button>
+            </div>
+        </div>
                     
             </div>
         </div>
