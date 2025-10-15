@@ -108,10 +108,10 @@ try {
 
 window.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('isBlocked') === 'true') {
-    if (bodyInput) bodyInput.style.display = 'none'
+    if (form) form.style.display = 'none'
   }
   else {
-    if (bodyInput) bodyInput.style.display = 'block'
+    if (form) form.style.display = 'block'
   }
 })
 
