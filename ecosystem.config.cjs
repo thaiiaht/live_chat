@@ -13,6 +13,22 @@ module.exports = {
       env_production: {
         NODE_ENV: 'production',         // Biến môi trường khi chạy pm2 start --env production
       }
-    }
+    },
+    {
+      name: 'live_chat_worker',
+      cwd: '/var/www/html/live_chat',
+      script: 'node',
+      args: 'ace run:worker', // chạy hàng đợi job
+      instances: 2, // tăng nếu cần xử lý nhiều job song song
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '500M',
+      env: {
+        NODE_ENV: 'development',
+      },
+      env_production: {
+        NODE_ENV: 'production',
+      },
+    },
   ]
 }
