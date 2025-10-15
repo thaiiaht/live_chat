@@ -67,6 +67,7 @@ async function loadHistory() {
   }
 }
 
+let isBlock = false
 
 // Subscribe realtime
 async function initRealtime() {
@@ -83,8 +84,11 @@ try {
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
-        form.style.display = 'none'
+        isBlock = true
         location.reload() 
+      }
+      else {
+        isBlock = false
       }
     })
     await userSub.create()
@@ -100,6 +104,14 @@ try {
     console.error('Subscription failed', err)
   }
 }
+
+if ( isBlock === 'true' ) {
+  form.style.display = 'none'
+}
+else {
+  form.style.display = 'block'
+}
+
 import { Filter } from 'bad-words'
 const filter = new Filter();
 const bannedWords = [

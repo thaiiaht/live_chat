@@ -159,7 +159,9 @@ export default class ChatsController {
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'active',
       await data.save()
-
+      transmit.broadcast(`/user/${senderId}`, {
+        type: 'unblocked',
+      })
       return response.json({ success: true })
       } catch {
       return response.badRequest(' Try Again ')
