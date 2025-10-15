@@ -55,6 +55,7 @@ async function listenUser() {
 const form = document.getElementById('form')
 const bodyInput = document.getElementById('body')
 const messagesEl = document.getElementById('messages')
+const insideForm = document.getElementById('inside-form')
 
 // Load 50 tin nhắn đầu 
 async function loadHistory() {
@@ -108,10 +109,10 @@ try {
 
 window.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('isBlocked') === 'true') {
-    if (bodyInput) bodyInput.style.display = 'none'
+    if (insideForm) insideForm.style.display = 'none'
   }
   else {
-    if (bodyInput) bodyInput.style.display = 'block'
+    if (insideForm) insideForm.style.display = 'block'
   }
 })
 
