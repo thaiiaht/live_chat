@@ -89,7 +89,6 @@ try {
       }
       else {
         localStorage.setItem('isBlocked', 'false')
-        location.reload() 
       }
     })
     await userSub.create()
@@ -112,6 +111,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   else {
     if (bodyInput) bodyInput.style.display = 'block'
+    location.reload()
   }
 })
 
