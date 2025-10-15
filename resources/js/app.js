@@ -84,6 +84,11 @@ try {
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
+        localStorage.setItem('isBlocked', 'true')
+        location.reload() 
+      }
+      else {
+        localStorage.setItem('isBlocked', 'false')
         location.reload() 
       }
     })
@@ -100,6 +105,15 @@ try {
     console.error('Subscription failed', err)
   }
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('isBlocked') === 'true') {
+    if (bodyInput) bodyInput.style.display = 'none'
+  }
+  else {
+    if (bodyInput) bodyInput.style.display = 'block'
+  }
+})
 
 import { Filter } from 'bad-words'
 const filter = new Filter();
