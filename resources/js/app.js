@@ -84,11 +84,7 @@ try {
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
-        isBlock = true
         location.reload() 
-      }
-      else {
-        isBlock = false
       }
     })
     await userSub.create()
@@ -103,13 +99,6 @@ try {
   catch (err) {
     console.error('Subscription failed', err)
   }
-}
-
-if ( isBlock === 'true' ) {
-  form.style.display = 'none'
-}
-else {
-  form.style.display = 'block'
 }
 
 import { Filter } from 'bad-words'
