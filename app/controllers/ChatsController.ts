@@ -5,6 +5,10 @@ import Users from '#models/user'
 import jwt from 'jsonwebtoken'
 import Donate from '#models/donate'
 import { Filter } from 'bad-words'
+import { enqueueUserCreation } from '#jobs/create_user_job'
+import { enqueueMessageCreation } from '#jobs/create_message_job'
+import { DateTime } from 'luxon'
+
 const filter = new Filter();
 filter.addWords('dm', 'đm', 'cc', 'cl', 'vl', 'địt', 'cặc', 'lồn', 'bitch', 'fuck')
 
@@ -14,7 +18,7 @@ export default class ChatsController {
   }
 
   async join({ request, response, auth }: HttpContext) {
-      const { token, roomId } = request.only(['token', 'roomId'])
+      const { roomId, token } = request.only(['roomId', 'token'])
       await auth.use('web').check()
       const partner = auth.use('web').user
        try {
@@ -22,35 +26,32 @@ export default class ChatsController {
           id: string
           email: string
           fullName: string
+          role: string
         }
         console.log(roomId)
-        const data = await Users.query().where('id', user.id).first()
-          if (!data) {
-            await Users.create({
-              id: user.id,
-              email: user.email,
-              fullName: user.fullName,
-              roomId: roomId,
-              partnerId: partner?.id,
-            })
-          }
+        await enqueueUserCreation({
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName,
+        roomId,
+        partnerId: partner?.id,
+      })
           transmit.broadcast(`join/${token}`, {
             event: 'user_joined',
             data: {
               id: user.id,
               sender: user.fullName,
               email: user.email,
-              role: data!.role,
+              role: user.role,
             },
           })
 
           return response.json({
             status: 'ok',
             user,
-            key: process.env.JWT_SECRET
           })
         } catch (error) {
-          return response.badRequest({ status: 'error', message: 'Invalid token', error })
+          return response.badRequest({ status: 'error', message: 'Invalid token' })
         }
       }
 
@@ -79,26 +80,23 @@ export default class ChatsController {
       return response.badRequest({ message: 'body is required' })
     }
     const cleanBody = filter.clean(body)
-    const msg = await ChatMessage.create({ 
-        roomId: params.id,
-        sender: sender,
-        senderId: senderId,
-        body: cleanBody,
-        type: 'user',
+    await enqueueMessageCreation({
+      roomId: params.id,
+      sender,
+      senderId,
+      body: cleanBody,
+      type: 'user',
     })
 
     // broadcast realtime
     transmit.broadcast(`/chats/messages/${params.id}`, {
-      id: msg.id,
-      roomId: msg.roomId,
-      sender: msg.sender,
-      senderId: msg.senderId,
-      body: msg.body,
-      createdAt: msg.createdAt.toISO(),
+      roomId: params.id,
+      sender: sender,
+      senderId: senderId,
+      body: cleanBody,
+      createdAt: DateTime.now().toISO() ,
       type: 'user',
     })
-
-    return response.json(msg)
   }
 
   // Donate
