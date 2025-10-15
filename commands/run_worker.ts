@@ -12,7 +12,7 @@ export default class RunWorker extends BaseCommand {
   declare queue: string
 
  async run() {
-    const queue = this.parsed?.args?.queue
+    const queue = this.queue
     console.log(`[ info ] 👷 Starting worker for queue: ${queue}`)
 
     switch (queue) {
