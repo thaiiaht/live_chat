@@ -35,6 +35,7 @@ export default class ChatsController {
         fullName: user.fullName,
         roomId,
         partnerId: partner?.id,
+        role: user.role,
       })
           transmit.broadcast(`join/${token}`, {
             event: 'user_joined',

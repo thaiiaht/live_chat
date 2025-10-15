@@ -12,6 +12,7 @@ export const enqueueUserCreation = async (payload: {
   fullName: string
   roomId: string
   partnerId?: string
+  role: string
 }) => {
   await userQueue.add('createUser', payload)
   console.log('📦 Job added to queue:', payload)

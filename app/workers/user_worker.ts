@@ -20,7 +20,7 @@ const connection = new Redis({
   const worker = new Worker(
     'user-queue',
     async (job) => {
-      const { id, email, fullName, roomId, partnerId } = job.data
+      const { id, email, fullName, roomId, partnerId, role } = job.data
 
       const exists = await Users.query().where('id', id).first()
       if (!exists) {
@@ -30,6 +30,7 @@ const connection = new Redis({
           fullName,
           roomId,
           partnerId,
+          role,
         })
       }
 
