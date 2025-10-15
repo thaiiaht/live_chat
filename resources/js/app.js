@@ -83,6 +83,7 @@ try {
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
+        form.style.display = 'none'
         location.reload() 
       }
     })
