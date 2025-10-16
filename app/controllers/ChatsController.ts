@@ -17,7 +17,7 @@ export default class ChatsController {
     return view.render('pages/chatBox')
   }
 
-  async join({ request, response, auth }: HttpContext) {
+  async join({ request, response }: HttpContext) {
       const { roomId, token, mainName } = request.only(['roomId', 'token', 'mainName'])
        try {
         const user = jwt.verify(token, process.env.JWT_SECRET!) as {
