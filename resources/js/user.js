@@ -10,6 +10,7 @@ document.addEventListener('click', async (e) => {
     })
 
     alert(`Đã chặn người dùng: ${name}`)
+    localStorage.setItem('isBlock', 'true')
     window.location.reload()
   }
 })
@@ -25,8 +26,8 @@ document.addEventListener('click', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ senderId: id, sender: name }),
     })
-
     alert(`Đã bỏ chặn người dùng: ${name}`)
+    localStorage.setItem('isBlock', 'false')
     window.location.reload()
   }
 })
