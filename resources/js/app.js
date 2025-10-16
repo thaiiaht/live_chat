@@ -19,15 +19,17 @@ let ownToken = null
   })
 
 window.addEventListener('message', async (event) => {
-    const { roomId, token } = event.data
-    console.log( token )
+    const { roomId, token, url } = event.data
+      const hostname = new URL(url).hostname
+      const mainName = hostname.replace(/^www\./, '').split('.')[0]
+      console.log(mainName) 
     ownToken = token
     chatId = roomId
     await listenUser()
     const res = await fetch('/join', {
         method: 'POST',
         headers: { 'content-Type': 'application/json' },
-        body: JSON.stringify({ token, roomId }),
+        body: JSON.stringify({ token, roomId, mainName }),
     })
     const data = await res.json()
     if (data.status === 'ok') { 

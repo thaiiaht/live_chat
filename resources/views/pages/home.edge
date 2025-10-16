@@ -93,7 +93,8 @@
               const iframe = document.getElementById('myFrame')
               iframe.contentWindow.postMessage({
                 token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTc3LCJmdWxsTmFtZSI6IkFkbWluLTEiLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwiaWF0IjoxNzYwNTAyNTQ5fQ.SZeFv-5qla9PLboQznkhGpKs7bUZFUEG37w8xPZW5JM',
-                roomId: 'room123'
+                roomId: 'room123',
+                url: window.location.origin,
               }, '*')   
             } 
           })

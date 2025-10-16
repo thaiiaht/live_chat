@@ -15,7 +15,7 @@ export default class Users extends BaseModel {
   declare roomId: string | null
 
   @column()
-  declare partnerId: string
+  declare partner: string
 
   @column()
   declare role: 'user' | 'admin'

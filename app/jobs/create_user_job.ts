@@ -11,7 +11,7 @@ export const enqueueUserCreation = async (payload: {
   email: string
   fullName: string
   roomId: string
-  partnerId?: string
+  partner: string
   role: string
 }) => {
   await userQueue.add('createUser', payload)
