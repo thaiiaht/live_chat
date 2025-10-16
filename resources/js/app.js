@@ -68,7 +68,6 @@ async function loadHistory() {
   }
 }
 
-let isBlock = false
 
 // Subscribe realtime
 async function initRealtime() {
@@ -85,11 +84,11 @@ try {
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
-        localStorage.setItem('isBlocked', 'true')
+        localStorage.setItem('isBlock', 'true')
         location.reload() 
       }
       else {
-        localStorage.setItem('isBlocked', 'false')
+        localStorage.setItem('isBlock', 'false')
         location.reload()
       }
     })
@@ -108,7 +107,8 @@ try {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem('isBlocked') === 'true') {
+  console.log(localStorage.getItem('isBlock'))
+  if (localStorage.getItem('isBlock') === 'true') {
     bodyInput.style.display = 'none'
     emojiBtn.style.display = 'none'
   }
