@@ -54,7 +54,24 @@ export default class ChatsController {
         }
       }
 
-
+  async guessJoin({ request, response }: HttpContext) {
+    const { guestId, guess, role } = request.only(['guestId','guess', 'role'])
+    try {
+      transmit.broadcast(`join/${guestId}`, {
+        event: 'user_joined',
+        data: {
+          id: guestId,
+          sender: guess,
+          role: role,
+        },
+      })
+        return response.json({
+          status: 'ok',
+          })
+    } catch (error) {
+      return response.badRequest()
+      }
+  }
 
 
   // Lấy 50 tin mới nhất

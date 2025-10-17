@@ -22,10 +22,23 @@ window.addEventListener('message', async (event) => {
     const { roomId, token, url } = event.data
       const hostname = new URL(url).hostname
       const mainName = hostname.replace(/^www\./, '').split('.')[0]
-      console.log(mainName) 
-    ownToken = token
     chatId = roomId
+    ownToken = token
+    console.log(ownToken)
     await listenUser()
+    if ( !ownToken || ownToken === 'null') {
+      currentUser = getOrCreateGuest()
+      ownToken = currentUser.id
+      const res = await fetch('/guessJoin', {
+        method: 'POST',
+        headers: { 'content-Type': 'application/json' },
+        body: JSON.stringify({ guessId: currentUser.id, guess: currentUser.sender, role: currentUser.role }),
+      })
+      const data = await res.json()
+      if (data.status === 'ok') { 
+          initApp()
+      } 
+    } else {
     const res = await fetch('/join', {
         method: 'POST',
         headers: { 'content-Type': 'application/json' },
@@ -35,7 +48,22 @@ window.addEventListener('message', async (event) => {
     if (data.status === 'ok') { 
         initApp()
     }
+  }
 })
+
+function getOrCreateGuest() {
+  const stored = localStorage.getItem('guestInfo')
+  if (stored) return JSON.parse(stored)
+
+  const newGuest = {
+    id: 'guest_' + Math.random().toString(36).substring(2, 10),
+    sender: 'Guest-' + Math.random().toString(36).substring(2, 6),
+    role: 'guest',
+  }
+  localStorage.setItem('guestInfo', JSON.stringify(newGuest))
+  return newGuest
+}
+
 
 let currentUser = null 
 
