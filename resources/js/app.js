@@ -32,7 +32,7 @@ window.addEventListener('message', async (event) => {
       const res = await fetch('/guessJoin', {
         method: 'POST',
         headers: { 'content-Type': 'application/json' },
-        body: JSON.stringify({ guessId: currentUser.id, guess: currentUser.sender, role: currentUser.role }),
+        body: JSON.stringify({ guestId: currentUser.id, guest: currentUser.sender, role: currentUser.role }),
       })
       const data = await res.json()
       if (data.status === 'ok') { 

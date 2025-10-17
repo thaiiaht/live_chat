@@ -55,13 +55,13 @@ export default class ChatsController {
       }
 
   async guessJoin({ request, response }: HttpContext) {
-    const { guestId, guess, role } = request.only(['guestId','guess', 'role'])
+    const { guestId, guest, role } = request.only(['guestId','guest', 'role'])
     try {
       transmit.broadcast(`join/${guestId}`, {
         event: 'user_joined',
         data: {
           id: guestId,
-          sender: guess,
+          sender: guest,
           role: role,
         },
       })
