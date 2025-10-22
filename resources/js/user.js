@@ -1,4 +1,4 @@
-const { mainName } = require('./app')
+import { mainName } from './app.js'
 
 document.addEventListener('click', async (e) => {
   if (e.target.matches('.btn-block')) {
