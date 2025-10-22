@@ -22,6 +22,7 @@ window.addEventListener('message', async (event) => {
     const { roomId, token, url } = event.data
       const hostname = new URL(url).hostname
       const mainName = hostname.replace(/^www\./, '').split('.')[0]
+      module.exports = { mainName }
     chatId = roomId
     ownToken = token
     console.log(ownToken)
@@ -71,7 +72,7 @@ import { Transmit } from "@adonisjs/transmit-client"
 const transmit = new Transmit({ baseUrl: window.location.origin })
 
 async function listenUser() {
-  const sub = transmit.subscription(`join/${ownToken}`)
+  const sub = transmit.subscription(`join/${mainName}/${ownToken}`)
   sub.onMessage((msg) => { 
     if ( msg.event === 'user_joined') {
       currentUser = msg.data
@@ -104,13 +105,13 @@ async function initRealtime() {
 
 try {
    // Subcribe kênh chat chung
-  const subscription = transmit.subscription(`/chats/messages/${chatId}`)
+  const subscription = transmit.subscription(`/chats/messages/${mainName}/${chatId}`)
   subscription.onMessage((data) => 
     appendMessage(data))
   await subscription.create()
 
   // Subcribe kênh riêng của user hiện tại
-  const userSub = transmit.subscription(`/user/${currentUser.id}`)
+  const userSub = transmit.subscription(`/user/${mainName}/${currentUser.id}`)
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
@@ -205,7 +206,7 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch(`/chats/messages/${chatId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: currentUser.id, sender: currentUser.sender, body: cleanBody })
+      body: JSON.stringify({ senderId: currentUser.id, sender: currentUser.sender, body: cleanBody, mainName })
     })
   if (res.ok) bodyInput.value = ''
   } catch (err) {
@@ -308,7 +309,7 @@ window.blockUser= async function (targetId, targetName) {
   const res = await fetch('/block', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ senderId: targetId, sender: targetName }),
+    body: JSON.stringify({ senderId: targetId, sender: targetName, mainName }),
   })
     alert('Đã chặn người dùng!');
     closeAllMenus();

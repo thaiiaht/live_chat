@@ -1,3 +1,5 @@
+const { mainName } = require('./app')
+
 document.addEventListener('click', async (e) => {
   if (e.target.matches('.btn-block')) {
     const id = e.target.dataset.id
@@ -6,7 +8,7 @@ document.addEventListener('click', async (e) => {
     const res = await fetch('/block', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: id, sender: name }),
+      body: JSON.stringify({ senderId: id, sender: name, mainName }),
     })
 
     alert(`Đã chặn người dùng: ${name}`)
@@ -24,7 +26,7 @@ document.addEventListener('click', async (e) => {
     const res = await fetch('/unblock', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: id, sender: name }),
+      body: JSON.stringify({ senderId: id, sender: name, mainName }),
     })
     alert(`Đã bỏ chặn người dùng: ${name}`)
     localStorage.setItem('isBlock', 'false')

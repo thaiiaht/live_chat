@@ -3,7 +3,6 @@ import ChatMessage from '#models/chat_message'
 import transmit from '@adonisjs/transmit/services/main'
 import Users from '#models/user'
 import jwt from 'jsonwebtoken'
-import Donate from '#models/donate'
 import { Filter } from 'bad-words'
 import { enqueueUserCreation } from '#jobs/create_user_job'
 import { enqueueMessageCreation } from '#jobs/create_message_job'
@@ -35,7 +34,7 @@ export default class ChatsController {
         partner: mainName,
         role: user.role,
       })
-          transmit.broadcast(`join/${token}`, {
+          transmit.broadcast(`join/${mainName}/${token}`, {
             event: 'user_joined',
             data: {
               id: user.id,
@@ -55,9 +54,9 @@ export default class ChatsController {
       }
 
   async guessJoin({ request, response }: HttpContext) {
-    const { guestId, guest, role } = request.only(['guestId','guest', 'role'])
+    const { guestId, guest, role, mainName } = request.only(['guestId','guest', 'role', 'mainName'])
     try {
-      transmit.broadcast(`join/${guestId}`, {
+      transmit.broadcast(`join/${mainName}/${guestId}`, {
         event: 'user_joined',
         data: {
           id: guestId,
@@ -92,6 +91,7 @@ export default class ChatsController {
     const body = request.input('body')
     let sender = request.input('sender')
     const senderId = request.input('senderId')
+    const mainName = request.input('mainName')
     if (!body || body.trim() === '') {
       return response.badRequest({ message: 'body is required' })
     }
@@ -105,7 +105,7 @@ export default class ChatsController {
     })
 
     // broadcast realtime
-    transmit.broadcast(`/chats/messages/${params.id}`, {
+    transmit.broadcast(`/chats/messages/${mainName}/${params.id}`, {
       roomId: params.id,
       sender: sender,
       senderId: senderId,
@@ -115,38 +115,11 @@ export default class ChatsController {
     })
   }
 
-  // Donate
-  async donate({ request, params}: HttpContext) {
-    const req = await request.only(['sender', 'gift', 'total', 'senderId'])
-    await Donate.create({
-      userName: req.sender,
-      totalMoney: req.total,
-      donatedItem: req.gift,
-      roomId: params.id,
-    })
-    
-    const msg = await ChatMessage.create({ 
-        roomId: params.id,
-        sender: req.sender,
-        senderId: req.senderId,
-        body: ` ${req.sender} đã donate ${req.total}K VNĐ! `,
-        type: 'system',
-    })
-
-    transmit.broadcast(`/chats/messages/${params.id}`, {
-      id: msg.id,
-      roomId: msg.roomId,
-      sender: msg.sender,
-      body: msg.body,
-      createdAt: msg.createdAt.toISO(),
-      type: 'system',
-    })
-  }
-
   // Block
   async block({ request, response }: HttpContext) {
     try {
       const {senderId} = await request.only(['senderId'])
+      const { mainName } = await request.input('mainName')
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'block',
       await data.save()
@@ -157,7 +130,7 @@ export default class ChatsController {
 
       transmit.broadcast('messages: deleted', { senderId })
 
-      transmit.broadcast(`/user/${senderId}`, {
+      transmit.broadcast(`/user/${mainName}/${senderId}`, {
         type: 'blocked',
         message: 'Bạn đã bị block bởi mod',
       })
@@ -170,11 +143,12 @@ export default class ChatsController {
 
   async unblock({ request, response}: HttpContext) {
     try {
+      const { mainName } = await request.input('mainName')
       const {senderId} = await request.only(['senderId'])
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'active',
       await data.save()
-      transmit.broadcast(`/user/${senderId}`, {
+      transmit.broadcast(`/user/${mainName}/${senderId}`, {
         type: 'unblocked',
       })
       return response.json({ success: true })
