@@ -142,7 +142,6 @@ export default class ChatsController {
 
   async unblock({ request, response}: HttpContext) {
     try {
-      const { mainName } = await request.input('mainName')
       const {senderId} = await request.only(['senderId'])
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'active',
