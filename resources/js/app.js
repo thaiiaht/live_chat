@@ -23,7 +23,7 @@ window.addEventListener('message', async (event) => {
     const { roomId, token, url } = event.data
       const hostname = new URL(url).hostname
       mainName = hostname.replace(/^www\./, '').split('.')[0]
-      window.mainName = window.location.mainName
+      window.mainName = mainName
     chatId = roomId
     ownToken = token
     console.log(ownToken)
