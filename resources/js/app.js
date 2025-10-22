@@ -12,7 +12,7 @@ window.closeChat = function () {
 // Post Message
 let chatId = null
 let ownToken = null
-export const mainName = null
+let mainName = null
 
   window.addEventListener('DOMContentLoaded', () => {
     console.log('Chat iframe loaded')
@@ -23,6 +23,7 @@ window.addEventListener('message', async (event) => {
     const { roomId, token, url } = event.data
       const hostname = new URL(url).hostname
       mainName = hostname.replace(/^www\./, '').split('.')[0]
+      window.mainName = window.location.mainName
     chatId = roomId
     ownToken = token
     console.log(ownToken)

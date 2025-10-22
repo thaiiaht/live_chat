@@ -1,5 +1,3 @@
-import { mainName } from './app.js'
-
 document.addEventListener('click', async (e) => {
   if (e.target.matches('.btn-block')) {
     const id = e.target.dataset.id
@@ -26,7 +24,7 @@ document.addEventListener('click', async (e) => {
     const res = await fetch('/unblock', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: id, sender: name, mainName }),
+      body: JSON.stringify({ senderId: id, sender: name, mainName: window.mainName, }),
     })
     alert(`Đã bỏ chặn người dùng: ${name}`)
     localStorage.setItem('isBlock', 'false')
