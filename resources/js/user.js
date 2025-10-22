@@ -8,6 +8,7 @@ document.addEventListener('click', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ senderId: id, sender: name, mainName: window.mainName, }),
     })
+    console.log(mainName)
 
     alert(`Đã chặn người dùng: ${name}`)
     localStorage.setItem('isBlock', 'true')
