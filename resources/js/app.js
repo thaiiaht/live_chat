@@ -111,7 +111,7 @@ try {
   await subscription.create()
 
   // Subcribe kênh riêng của user hiện tại
-  const userSub = transmit.subscription(`/user/${currentUser.id}`)
+  const userSub = transmit.subscription(`/user/${mainName}/${currentUser.id}`)
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")

@@ -122,14 +122,14 @@ export default class ChatsController {
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'block',
       await data.save()
-
+      const mainName = data.partner
       await ChatMessage.query()
         .where('senderId', senderId)
         .delete()
-
+      
       transmit.broadcast('messages: deleted', { senderId })
 
-      transmit.broadcast(`/user/${senderId}`, {
+      transmit.broadcast(`/user/${mainName}/${senderId}`, {
         type: 'blocked',
         message: 'Bạn đã bị block bởi mod',
       })
@@ -146,7 +146,8 @@ export default class ChatsController {
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'active',
       await data.save()
-      transmit.broadcast(`/user/${senderId}`, {
+      const mainName = data.partner
+      transmit.broadcast(`/user/${mainName}/${senderId}`, {
         type: 'unblocked',
       })
       return response.json({ success: true })
