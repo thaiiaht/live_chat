@@ -21,7 +21,7 @@ document.addEventListener('click', async (e) => {
   if (e.target.matches('.btn-unblock')) {
     const id = e.target.dataset.id
     const name = e.target.dataset.name
-
+    const mainName = localStorage.getItem('mainName')
     const res = await fetch('/unblock', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
