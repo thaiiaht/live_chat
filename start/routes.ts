@@ -35,7 +35,6 @@ router.post('/join', [ChatsController, 'join'])
 router.post('/guessJoin', [ChatsController, 'guessJoin'])
 router.get('/chats/messages/:id', [ChatsController, 'index'])
 router.post('/chats/messages/:id', [ChatsController, 'store'])
-router.post('/donate/messages/:id', [ChatsController, 'donate'])
 router.patch('/block', [ChatsController, 'block'])
 router.patch('/unblock', [ChatsController, 'unblock'])
 
