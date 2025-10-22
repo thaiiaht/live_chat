@@ -119,7 +119,6 @@ export default class ChatsController {
   async block({ request, response }: HttpContext) {
     try {
       const {senderId} = await request.only(['senderId'])
-      const { mainName } = await request.input('mainName')
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'block',
       await data.save()
@@ -130,7 +129,7 @@ export default class ChatsController {
 
       transmit.broadcast('messages: deleted', { senderId })
 
-      transmit.broadcast(`/user/${mainName}/${senderId}`, {
+      transmit.broadcast(`/user/${senderId}`, {
         type: 'blocked',
         message: 'Bạn đã bị block bởi mod',
       })
@@ -148,7 +147,7 @@ export default class ChatsController {
       const data = await Users.findByOrFail('id', senderId)
       data.status = 'active',
       await data.save()
-      transmit.broadcast(`/user/${mainName}/${senderId}`, {
+      transmit.broadcast(`/user/${senderId}`, {
         type: 'unblocked',
       })
       return response.json({ success: true })

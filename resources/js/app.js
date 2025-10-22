@@ -23,6 +23,7 @@ window.addEventListener('message', async (event) => {
     const { roomId, token, url } = event.data
       const hostname = new URL(url).hostname
       mainName = hostname.replace(/^www\./, '').split('.')[0]
+      localStorage.setItem('mainName', mainName)
     chatId = roomId
     ownToken = token
     console.log(ownToken)
@@ -111,7 +112,7 @@ try {
   await subscription.create()
 
   // Subcribe kênh riêng của user hiện tại
-  const userSub = transmit.subscription(`/user/${mainName}/${currentUser.id}`)
+  const userSub = transmit.subscription(`/user/${currentUser.id}`)
     userSub.onMessage((data) => {
       if (data.type === 'blocked') {
         alert( "Bạn đã bị block")
@@ -309,7 +310,7 @@ window.blockUser= async function (targetId, targetName) {
   const res = await fetch('/block', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ senderId: targetId, sender: targetName, mainName }),
+    body: JSON.stringify({ senderId: targetId, sender: targetName }),
   })
     alert('Đã chặn người dùng!');
     closeAllMenus();
@@ -446,36 +447,3 @@ async function initApp() {
             }
         });
 
-document.addEventListener('click', async (e) => {
-  if (e.target.matches('.btn-block')) {
-    const id = e.target.dataset.id
-    const name = e.target.dataset.name
-
-    const res = await fetch('/block', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: id, sender: name, mainName }),
-    })
-
-    alert(`Đã chặn người dùng: ${name}`)
-    localStorage.setItem('isBlock', 'true')
-    window.location.reload()
-  }
-})
-
-
-document.addEventListener('click', async (e) => {
-  if (e.target.matches('.btn-unblock')) {
-    const id = e.target.dataset.id
-    const name = e.target.dataset.name
-
-    const res = await fetch('/unblock', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: id, sender: name, mainName }),
-    })
-    alert(`Đã bỏ chặn người dùng: ${name}`)
-    localStorage.setItem('isBlock', 'false')
-    window.location.reload()
-  }
-})

@@ -2,12 +2,13 @@ document.addEventListener('click', async (e) => {
   if (e.target.matches('.btn-block')) {
     const id = e.target.dataset.id
     const name = e.target.dataset.name
-
+    const mainName = localStorage.getItem('mainName')
     const res = await fetch('/block', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ senderId: id, sender: name }),
     })
+    console.log(mainName)
 
     alert(`Đã chặn người dùng: ${name}`)
     localStorage.setItem('isBlock', 'true')
@@ -20,7 +21,7 @@ document.addEventListener('click', async (e) => {
   if (e.target.matches('.btn-unblock')) {
     const id = e.target.dataset.id
     const name = e.target.dataset.name
-
+    const mainName = localStorage.getItem('mainName')
     const res = await fetch('/unblock', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
