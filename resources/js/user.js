@@ -6,7 +6,7 @@ document.addEventListener('click', async (e) => {
     const res = await fetch('/block', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ senderId: id, sender: name, mainName }),
+      body: JSON.stringify({ senderId: id, sender: name, mainName: window.mainName, }),
     })
 
     alert(`Đã chặn người dùng: ${name}`)
