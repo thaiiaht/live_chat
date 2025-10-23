@@ -46,7 +46,7 @@ window.addEventListener('message', async (event) => {
         headers: { 'content-Type': 'application/json' },
         body: JSON.stringify({ token, roomId, mainName }),
     })
-    const data = await res.json()
+    const data = await res.json() 
     if (data.status === 'ok') { 
         initApp()
     }
