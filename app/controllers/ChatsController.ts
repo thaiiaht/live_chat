@@ -26,7 +26,7 @@ export default class ChatsController {
           role: string
         }
         console.log(roomId)
-        await enqueueUserCreation({
+        enqueueUserCreation({
         id: user.id,
         email: user.email,
         fullName: user.fullName,
@@ -96,7 +96,7 @@ export default class ChatsController {
       return response.badRequest({ message: 'body is required' })
     }
     const cleanBody = filter.clean(body)
-    await enqueueMessageCreation({
+    enqueueMessageCreation({
       roomId: params.id,
       sender,
       senderId,
