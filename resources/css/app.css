@@ -328,23 +328,7 @@
     width: 100%;
 }
 
-/* Emoji Picker Styles */
-.emoji-picker {
-    display: none;
-    position: absolute;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 320px;
-    max-width: calc(100% - 32px);
-    height: 380px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    flex-direction: column;
-    overflow: hidden;
-}
+
 
 .emoji-picker.active {
     display: flex;
