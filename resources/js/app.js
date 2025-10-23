@@ -28,7 +28,6 @@ window.addEventListener('message', async (event) => {
     console.log(ownToken)
     console.log(mainName)
     await initChatSubscription()
-    await loadHistory()
     await listenUser()
     if ( !ownToken || ownToken === 'null') {
       currentUser = getOrCreateGuest()
@@ -41,7 +40,7 @@ window.addEventListener('message', async (event) => {
       const data = await res.json()
       if (data.status === 'ok') { 
           await initUserSubscriptions()
-          
+          await loadHistory()
       } 
     } else {
     const res = await fetch('/join', {
@@ -52,6 +51,7 @@ window.addEventListener('message', async (event) => {
     const data = await res.json() 
     if (data.status === 'ok') { 
         await initUserSubscriptions()
+        await loadHistory()
     }
   }
 })
