@@ -1,19 +1,14 @@
 .iframe-chat {
   position: fixed;   
-  top: 55%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%); 
   width: 1000px; 
-  height: 1000px; 
-  border-radius: 25px;
+  height: 800px; 
   border: none;
 }
 
 a {
   text-decoration: none;
   color: black;
-}
-
-body {
-  background-color: #3b3a41;
 }
