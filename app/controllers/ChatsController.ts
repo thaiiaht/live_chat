@@ -26,14 +26,14 @@ export default class ChatsController {
           role: string
         }
         console.log(roomId)
-        await enqueueUserCreation({
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        roomId,
-        partner: mainName,
-        role: user.role,
-      })
+      //   await enqueueUserCreation({
+      //   id: user.id,
+      //   email: user.email,
+      //   fullName: user.fullName,
+      //   roomId,
+      //   partner: mainName,
+      //   role: user.role,
+      // })
           transmit.broadcast(`join/${mainName}/${token}`, {
             event: 'user_joined',
             data: {
