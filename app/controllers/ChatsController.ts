@@ -4,7 +4,7 @@ import transmit from '@adonisjs/transmit/services/main'
 import Users from '#models/user'
 import jwt from 'jsonwebtoken'
 import { Filter } from 'bad-words'
-import { enqueueUserCreation } from '#jobs/create_user_job'
+// import { enqueueUserCreation } from '#jobs/create_user_job'
 import { enqueueMessageCreation } from '#jobs/create_message_job'
 import { DateTime } from 'luxon'
 
