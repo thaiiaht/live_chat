@@ -48,7 +48,7 @@ window.addEventListener('message', async (event) => {
     })
     const data = await res.json() 
     if (data.status === 'ok') { 
-        await ainitApp()
+        await initApp()
     }
   }
 })
