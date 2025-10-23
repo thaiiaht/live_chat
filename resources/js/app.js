@@ -38,7 +38,7 @@ window.addEventListener('message', async (event) => {
       })
       const data = await res.json()
       if (data.status === 'ok') { 
-          initApp()
+          await initApp()
       } 
     } else {
     const res = await fetch('/join', {
@@ -48,7 +48,7 @@ window.addEventListener('message', async (event) => {
     })
     const data = await res.json() 
     if (data.status === 'ok') { 
-        initApp()
+        await ainitApp()
     }
   }
 })
