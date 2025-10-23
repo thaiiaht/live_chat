@@ -27,6 +27,7 @@ window.addEventListener('message', async (event) => {
     ownToken = token
     console.log(ownToken)
     console.log(mainName)
+    await initChatSubscription()
     await listenUser()
     if ( !ownToken || ownToken === 'null') {
       currentUser = getOrCreateGuest()
@@ -72,6 +73,13 @@ let currentUser = null
 import { Transmit } from "@adonisjs/transmit-client"
 const transmit = new Transmit({ baseUrl: window.location.origin })
 
+async function initChatSubscription() {
+   const subscription = transmit.subscription(`/chats/messages/${mainName}/${chatId}`)
+  subscription.onMessage((data) => 
+    appendMessage(data))
+  await subscription.create()
+}
+
 async function listenUser() {
   const sub = transmit.subscription(`join/${mainName}/${ownToken}`)
   sub.onMessage((msg) => { 
@@ -105,12 +113,6 @@ async function loadHistory() {
 async function initRealtime() {
 
 try {
-   // Subcribe kênh chat chung
-  const subscription = transmit.subscription(`/chats/messages/${mainName}/${chatId}`)
-  subscription.onMessage((data) => 
-    appendMessage(data))
-  await subscription.create()
-
   // Subcribe kênh riêng của user hiện tại
   const userSub = transmit.subscription(`/user/${mainName}/${currentUser.id}`)
     userSub.onMessage((data) => {
