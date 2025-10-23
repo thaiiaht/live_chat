@@ -49,7 +49,7 @@ export default class ChatsController {
             user,
           })
         } catch (error) {
-          return response.badRequest({ status: 'error', message: 'Invalid token' })
+          return response.badRequest({ status: 'error', message: 'Invalid token', error })
         }
       }
 
