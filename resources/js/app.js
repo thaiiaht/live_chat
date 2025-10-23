@@ -27,6 +27,8 @@ window.addEventListener('message', async (event) => {
     ownToken = token
     console.log(ownToken)
     console.log(mainName)
+    await initChatSubscription()
+    await loadHistory()
     await listenUser()
     if ( !ownToken || ownToken === 'null') {
       currentUser = getOrCreateGuest()
@@ -38,7 +40,8 @@ window.addEventListener('message', async (event) => {
       })
       const data = await res.json()
       if (data.status === 'ok') { 
-          initApp()
+          await initUserSubscriptions()
+          
       } 
     } else {
     const res = await fetch('/join', {
@@ -48,10 +51,20 @@ window.addEventListener('message', async (event) => {
     })
     const data = await res.json() 
     if (data.status === 'ok') { 
-        initApp()
+        await initUserSubscriptions()
     }
   }
 })
+import { Transmit } from "@adonisjs/transmit-client"
+const transmit = new Transmit({ baseUrl: window.location.origin })
+
+// ==================== Chat chung ====================
+async function initChatSubscription() {
+  const chatSub = transmit.subscription(`/chats/messages/${mainName}/${chatId}`)
+  chatSub.onMessage(appendMessage)
+  await chatSub.create()
+}
+
 
 function getOrCreateGuest() {
   const stored = localStorage.getItem('guestInfo')
@@ -69,8 +82,6 @@ function getOrCreateGuest() {
 
 let currentUser = null 
 
-import { Transmit } from "@adonisjs/transmit-client"
-const transmit = new Transmit({ baseUrl: window.location.origin })
 
 async function listenUser() {
   const sub = transmit.subscription(`join/${mainName}/${ownToken}`)
@@ -102,40 +113,33 @@ async function loadHistory() {
 
 
 // Subscribe realtime
-async function initRealtime() {
+async function initUserSubscriptions() {
+  try {
+    // Subcribe kênh riêng của user hiện tại
+    const userSub = transmit.subscription(`/user/${mainName}/${currentUser.id}`)
+      userSub.onMessage((data) => {
+        if (data.type === 'blocked') {
+          alert( "Bạn đã bị block")
+          localStorage.setItem('isBlock', 'true')
+          location.reload() 
+        }
+        else {
+          localStorage.setItem('isBlock', 'false')
+          location.reload()
+        }
+      })
+      await userSub.create()
 
-try {
-   // Subcribe kênh chat chung
-  const subscription = transmit.subscription(`/chats/messages/${mainName}/${chatId}`)
-  subscription.onMessage((data) => 
-    appendMessage(data))
-  await subscription.create()
-
-  // Subcribe kênh riêng của user hiện tại
-  const userSub = transmit.subscription(`/user/${mainName}/${currentUser.id}`)
-    userSub.onMessage((data) => {
-      if (data.type === 'blocked') {
-        alert( "Bạn đã bị block")
-        localStorage.setItem('isBlock', 'true')
-        location.reload() 
-      }
-      else {
-        localStorage.setItem('isBlock', 'false')
-        location.reload()
-      }
-    })
-    await userSub.create()
-
-    // Kênh xoá tin nhắn
-  const deletedSub = transmit.subscription('messages: deleted')
-    deletedSub.onMessage(({ senderId }) => {
-      document.querySelectorAll(`[data-sender="${senderId}"]`).forEach(el => el.remove())
-    })
-    await deletedSub.create() 
-  }
-  catch (err) {
-    console.error('Subscription failed', err)
-  }
+      // Kênh xoá tin nhắn
+    const deletedSub = transmit.subscription('messages: deleted')
+      deletedSub.onMessage(({ senderId }) => {
+        document.querySelectorAll(`[data-sender="${senderId}"]`).forEach(el => el.remove())
+      })
+      await deletedSub.create() 
+    }
+    catch (err) {
+      console.error('Subscription failed', err)
+    }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -327,12 +331,6 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
   )
-}
-
-// Init
-async function initApp() {
-  await loadHistory()
-  await initRealtime()
 }
 
 

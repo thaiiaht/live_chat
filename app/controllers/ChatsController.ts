@@ -34,15 +34,15 @@ export default class ChatsController {
         partner: mainName,
         role: user.role,
       })
-          transmit.broadcast(`join/${mainName}/${token}`, {
-            event: 'user_joined',
-            data: {
-              id: user.id,
-              sender: user.fullName,
-              email: user.email,
-              role: user.role,
-            },
-          })
+        transmit.broadcast(`join/${mainName}/${token}`, {
+           event: 'user_joined',
+           data: {
+             id: user.id,
+             sender: user.fullName,
+             email: user.email,
+             role: user.role,
+           },
+         })
 
           return response.json({
             status: 'ok',
