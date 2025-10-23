@@ -26,6 +26,7 @@ window.addEventListener('message', async (event) => {
     chatId = roomId
     ownToken = token
     console.log(ownToken)
+    console.log(mainName)
     await listenUser()
     if ( !ownToken || ownToken === 'null') {
       currentUser = getOrCreateGuest()
