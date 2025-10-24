@@ -225,7 +225,7 @@ function appendMessage(msg) {
       el.classList.add('user-message')
       el.style.color = 'black'
     if ( currentUser.role === 'admin') {
-        el.innerHTML = `<div><i class="fa-regular fa-user-astronaut fa-xl" style="color: #2788d3;"></i>
+        el.innerHTML = `<div><i class="fa-regular fa-user-astronaut fa-lg" style="color: #2788d3;"></i>
         <small>${new Date(msg.createdAt).toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit'
